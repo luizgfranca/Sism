@@ -8,10 +8,23 @@ find_package(sdbus-c++ REQUIRED)
 find_package(PkgConfig)
 pkg_check_modules(GTKMM gtkmm-4.0)
 
-link_directories(${GTKMM_LIBRARY_DIRS})
-include_directories(${GTKMM_INCLUDE_DIRS})
+link_directories(
+    ${GTKMM_LIBRARY_DIRS}
+    client/dbus/systemd
+    application
+    )
+include_directories(
+    ${GTKMM_INCLUDE_DIRS}
+    client/dbus/systemd
+    application
+    )
 
-add_executable(app main.cpp)
+add_executable(
+    app 
+    main.cpp
+    client/dbus/systemd/systemd-manager.cpp
+    application/state.cpp
+    )
 
 target_link_libraries(
     app 
