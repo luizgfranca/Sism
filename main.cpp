@@ -26,14 +26,6 @@ Glib::RefPtr<Gtk::Application> global_application = nullptr;
 client::dbus::systemd::SystemdManager global_systemd_manager_client;
 application::State global_state(global_systemd_manager_client);
 
-void onConcatenated(sdbus::Signal& signal)
-{
-    std::string concatenatedString;
-    signal >> concatenatedString;
-
-    std::cout << "Received signal with concatenated string " << concatenatedString << std::endl;
-}
-
 class MainWindow : public Gtk::Window {
 private:
     class ColumnModel : public Gtk::TreeModel::ColumnRecord {
@@ -83,8 +75,8 @@ MainWindow::MainWindow() {
 
     set_child(scroller);
 
-    for(auto unit : global_state.get_units_list()) {
-        add_grid_item(unit.get<0>(), unit.get<2>(), unit.get<1>());
+    for(auto service : global_state.get_services_list()) {
+        add_grid_item(service.get<0>(), service.get<2>(), service.get<1>());
     }
 }
 
