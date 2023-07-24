@@ -49,26 +49,42 @@ private:
     Glib::RefPtr<Gtk::ListStore> m_tree_store;
 
     Gtk::HeaderBar m_header_bar;
-    Gtk::Button m_start_stop_button;
+    Gtk::Button m_stop_button;
+    Gtk::Button m_start_button;
 
     void add_grid_item(std::string name, std::string status, std::string description);
 
 public:
     MainWindow();
-    void on_row_selected(const int line);
+    void stop_service(const int line);
+    void start_service(const int line);
     int get_current_row();
 };
 
 void row_selected_signal_handler(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column) {
-    dynamic_cast<MainWindow*>(global_application->get_run_window())->on_row_selected(std::stoi(path.to_string()));
+    dynamic_cast<MainWindow*>(global_application->get_run_window())->stop_service(std::stoi(path.to_string()));
 }
 
-void start_stop_clicked_signal_handler() {
-    std::cout << "start_stop_clicked_signal_handler\n";
-    auto main_window = dynamic_cast<MainWindow*>(global_application->get_run_window());
+MainWindow* get_main_window() {
+    return dynamic_cast<MainWindow*>(global_application->get_run_window());
+}
+
+int get_current_row(MainWindow* main_window) {
     auto row = main_window->get_current_row();
     std::cout << "selected " << row << "\n";
-    main_window->on_row_selected(row);
+    return row;
+}
+
+void stop_clicked_signal_handler() {
+    std::cout << "stop_clicked_signal_handler\n";
+    auto main_window = get_main_window();
+    main_window->stop_service(get_current_row(main_window));
+}
+
+void start_clicked_signal_handler() {
+    std::cout << "start_clicked_signal_handler\n";
+    auto main_window = get_main_window();
+    main_window->start_service(get_current_row(main_window));
 }
 
 MainWindow::MainWindow() {
@@ -92,10 +108,14 @@ MainWindow::MainWindow() {
         add_grid_item(service.get<0>(), service.get<4>(), service.get<1>());
     }
 
-    m_start_stop_button.set_label("Start / Stop service");
-    m_start_stop_button.signal_clicked().connect(sigc::ptr_fun(start_stop_clicked_signal_handler));
+    m_stop_button.set_label("Stop");
+    m_stop_button.signal_clicked().connect(sigc::ptr_fun(stop_clicked_signal_handler));
 
-    m_header_bar.pack_end(m_start_stop_button);
+    m_start_button.set_label("Start");
+    m_start_button.signal_clicked().connect(sigc::ptr_fun(start_clicked_signal_handler));
+
+    m_header_bar.pack_end(m_stop_button);
+    m_header_bar.pack_end(m_start_button);
     set_titlebar(m_header_bar);
 }
 
@@ -107,10 +127,17 @@ void MainWindow::add_grid_item(std::string name, std::string status, std::string
     row[m_model.m_service_description] = description;
 }
 
-void MainWindow::on_row_selected(const int line) {
+void MainWindow::stop_service(const int line) {
     const auto name = global_state.get_services_list()[line].get<0>();
     std::cout << "on_row_selected  " << name << "\n";
     global_systemd_manager_client.stop_unit(name);
+}
+
+
+void MainWindow::start_service(const int line) {
+    const auto name = global_state.get_services_list()[line].get<0>();
+    std::cout << "on_row_selected  " << name << "\n";
+    global_systemd_manager_client.start_unit(name);
 }
 
 int MainWindow::get_current_row() {
