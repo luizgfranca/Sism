@@ -19,24 +19,12 @@
 #include "gtkmm/treeview.h"
 #include "sigc++/functors/ptr_fun.h"
 #include <gtkmm-4.0/gtkmm.h>
+#include "application/state.h"
+
 
 Glib::RefPtr<Gtk::Application> global_application = nullptr;
-
-typedef     
-    std::vector<
-        sdbus::Struct<
-            std::string,
-            std::string,
-            std::string,
-            std::string,
-            std::string,
-            std::string,
-            sdbus::ObjectPath,
-            uint32_t,
-            std::string,
-            sdbus::ObjectPath
-        >
-    > ListUnitsResponse;
+client::dbus::systemd::SystemdManager global_systemd_manager_client;
+application::State global_state(global_systemd_manager_client);
 
 void onConcatenated(sdbus::Signal& signal)
 {
@@ -45,37 +33,6 @@ void onConcatenated(sdbus::Signal& signal)
 
     std::cout << "Received signal with concatenated string " << concatenatedString << std::endl;
 }
-
-ListUnitsResponse get_unit_list() {
-    const char* destinationName = "org.freedesktop.systemd1";
-    const char* objectPath = "/org/freedesktop/systemd1";
-    const char* interfaceName = "org.freedesktop.systemd1.Manager";
-
-    auto proxy = sdbus::createProxy(destinationName, objectPath);
-
-    proxy->finishRegistration();
-
-    ListUnitsResponse result;
-    proxy->callMethod("ListUnits").onInterface(interfaceName).storeResultsTo(result);
-
-    return result;
-}
-
-void stop_unit(std::string unit_name) {
-    const char* destinationName = "org.freedesktop.systemd1";
-    const char* objectPath = "/org/freedesktop/systemd1";
-    const char* interfaceName = "org.freedesktop.systemd1.Manager";
-
-    auto proxy = sdbus::createProxy(destinationName, objectPath);
-
-    proxy->finishRegistration();
-
-    sdbus::ObjectPath result;
-    proxy->callMethod("StopUnit").onInterface(interfaceName).withArguments(unit_name, "replace").storeResultsTo(result);
-
-    std::cout << "job: " << result.data() << "\n";
-}
-
 
 class MainWindow : public Gtk::Window {
 private:
@@ -96,7 +53,7 @@ private:
     Gtk::TreeView m_treeview;
     ColumnModel m_model;
     Glib::RefPtr<Gtk::ListStore> m_tree_store;
-    ListUnitsResponse m_units_list;
+    client::dbus::systemd::list_units_response_t m_units_list;
 
     void add_grid_item(std::string name, std::string status, std::string description);
 
@@ -126,8 +83,7 @@ MainWindow::MainWindow() {
 
     set_child(scroller);
 
-    m_units_list = get_unit_list();
-    for(auto unit : m_units_list) {
+    for(auto unit : global_state.get_units_list()) {
         add_grid_item(unit.get<0>(), unit.get<2>(), unit.get<1>());
     }
 }
@@ -143,7 +99,7 @@ void MainWindow::add_grid_item(std::string name, std::string status, std::string
 void MainWindow::on_row_selected(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column) {
     const auto name = m_units_list[std::stoi(path.to_string())].get<0>();
     std::cout << "on_row_selected  " << name << "\n";
-    stop_unit(name);
+    global_systemd_manager_client.stop_unit(name);
 }
 
 int main(int argc, char **argv) {
