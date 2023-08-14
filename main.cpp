@@ -91,12 +91,10 @@ MainWindow* get_main_window() {
 
 int get_current_row(MainWindow* main_window) {
     auto row = main_window->get_current_row();
-    std::cout << "selected " << row << "\n";
     return row;
 }
 
 void stop_clicked_signal_handler() {
-    std::cout << "stop_clicked_signal_handler\n";
     auto main_window = get_main_window();
     main_window->stop_service(get_current_row(main_window));
     sleep(1);
@@ -105,7 +103,6 @@ void stop_clicked_signal_handler() {
 }
 
 void start_clicked_signal_handler() {
-    std::cout << "start_clicked_signal_handler\n";
     auto main_window = get_main_window();
     main_window->start_service(get_current_row(main_window));
     sleep(1);
@@ -153,14 +150,12 @@ void MainWindow::add_grid_item(std::string name, std::string status, std::string
 
 void MainWindow::stop_service(const int line) {
     const auto name = global_state.get_services_list()[line].get<0>();
-    std::cout << "on_row_selected  " << name << "\n";
     global_systemd_manager_client.stop_unit(name);
 }
 
 
 void MainWindow::start_service(const int line) {
     const auto name = global_state.get_services_list()[line].get<0>();
-    std::cout << "on_row_selected  " << name << "\n";
     global_systemd_manager_client.start_unit(name);
 }
 
@@ -175,8 +170,6 @@ int MainWindow::get_current_row() {
 
 void MainWindow::load_grid_data() {
     m_tree_store->clear();
-
-    std::cout << "size: "<< global_state.get_services_list().size() << "\n";
 
     for(auto service : global_state.get_services_list()) {
         add_grid_item(service.get<0>(), service.get<4>(), service.get<1>());

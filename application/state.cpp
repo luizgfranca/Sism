@@ -18,27 +18,54 @@
 
 #include "state.h"
 #include <cassert>
+#include <cctype>
 #include <memory>
+#include <algorithm>
+#include <string>
+#include <cctype>
 
 using namespace application;
 
+// https://en.cppreference.com/w/cpp/string/byte/toupper
+std::string str_toupper(std::string s)
+{
+    std::transform(s.begin(), s.end(), s.begin(), 
+        [](unsigned char c){ return std::toupper(c); }
+    );
+    return s;
+}
+
+void State::sort_units() {
+    
+    std::sort(
+        m_units_list.begin(), 
+        m_units_list.end(),
+        [](
+            client::dbus::systemd::list_units_response_unit_t a, 
+            client::dbus::systemd::list_units_response_unit_t b
+        ) {
+            return str_toupper(b.get<0>()) > str_toupper(a.get<0>());
+        }
+    );
+}
 
 void State::load() {
-    assert(this->m_systemd_manager != nullptr);
-    this->m_units_list = this->m_systemd_manager->list_units();
+    assert(m_systemd_manager != nullptr);
+    m_units_list = m_systemd_manager->list_units();
+    sort_units();
 }
 
 State::State(client::dbus::systemd::SystemdManager& systemd_manager) {
-    this->m_systemd_manager = &systemd_manager;
-    this->load();
+    m_systemd_manager = &systemd_manager;
+    load();
 }
 
 void State::refresh() {
-    this->load();
+    load();
 }
 
 client::dbus::systemd::list_units_response_t& State::get_units_list() {
-    return this->m_units_list;
+    return m_units_list;
 }
 
 client::dbus::systemd::list_units_response_t& State::get_services_list() {

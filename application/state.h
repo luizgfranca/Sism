@@ -25,6 +25,7 @@ namespace application {
         client::dbus::systemd::list_units_response_t m_units_list;
         
         void load();
+        void sort_units();
     public:
         State(client::dbus::systemd::SystemdManager& systemd_manager);
         void refresh();
