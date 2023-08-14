@@ -13,6 +13,8 @@
 #include "glibmm/refptr.h"
 #include "gtkmm/application.h"
 #include "gtkmm/box.h"
+#include "gtkmm/button.h"
+#include "gtkmm/headerbar.h"
 #include "gtkmm/liststore.h"
 #include "gtkmm/scrolledwindow.h"
 #include "gtkmm/treemodel.h"
@@ -45,17 +47,28 @@ private:
     Gtk::TreeView m_treeview;
     ColumnModel m_model;
     Glib::RefPtr<Gtk::ListStore> m_tree_store;
-    client::dbus::systemd::list_units_response_t m_units_list;
+
+    Gtk::HeaderBar m_header_bar;
+    Gtk::Button m_start_stop_button;
 
     void add_grid_item(std::string name, std::string status, std::string description);
 
 public:
     MainWindow();
-    void on_row_selected(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column);
+    void on_row_selected(const int line);
+    int get_current_row();
 };
 
 void row_selected_signal_handler(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column) {
-    dynamic_cast<MainWindow*>(global_application->get_run_window())->on_row_selected(path, column);
+    dynamic_cast<MainWindow*>(global_application->get_run_window())->on_row_selected(std::stoi(path.to_string()));
+}
+
+void start_stop_clicked_signal_handler() {
+    std::cout << "start_stop_clicked_signal_handler\n";
+    auto main_window = dynamic_cast<MainWindow*>(global_application->get_run_window());
+    auto row = main_window->get_current_row();
+    std::cout << "selected " << row << "\n";
+    main_window->on_row_selected(row);
 }
 
 MainWindow::MainWindow() {
@@ -78,6 +91,12 @@ MainWindow::MainWindow() {
     for(auto service : global_state.get_services_list()) {
         add_grid_item(service.get<0>(), service.get<4>(), service.get<1>());
     }
+
+    m_start_stop_button.set_label("Start / Stop service");
+    m_start_stop_button.signal_clicked().connect(sigc::ptr_fun(start_stop_clicked_signal_handler));
+
+    m_header_bar.pack_end(m_start_stop_button);
+    set_titlebar(m_header_bar);
 }
 
 
@@ -88,10 +107,19 @@ void MainWindow::add_grid_item(std::string name, std::string status, std::string
     row[m_model.m_service_description] = description;
 }
 
-void MainWindow::on_row_selected(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column) {
-    const auto name = m_units_list[std::stoi(path.to_string())].get<0>();
+void MainWindow::on_row_selected(const int line) {
+    const auto name = global_state.get_services_list()[line].get<0>();
     std::cout << "on_row_selected  " << name << "\n";
     global_systemd_manager_client.stop_unit(name);
+}
+
+int MainWindow::get_current_row() {
+    auto selected_rows = m_treeview.get_selection()->get_selected_rows();
+    if(selected_rows.size() > 0) {
+        return std::stoi(selected_rows[0].to_string());
+    }
+
+    return -1;
 }
 
 int main(int argc, char **argv) {

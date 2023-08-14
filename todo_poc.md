@@ -2,5 +2,6 @@
  - [x] create separate object to hold state
  - [x] filter only services
  - [x] make grid show correctly state of services
- - [] add button to stop service
+ - [x] add button to stop service
  - [] add button to start service
+ - [] make service grid reload when action is taken
