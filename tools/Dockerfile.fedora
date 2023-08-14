@@ -1,0 +1,7 @@
+FROM luizgfc/systemd-fedora:38
+COPY dependencies-fedora.sh /
+COPY sism /
+
+RUN /dependencies-fedora.sh
+
+CMD "/sism"

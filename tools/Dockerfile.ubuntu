@@ -1,0 +1,8 @@
+FROM luizgfc/systemd-ubuntu:23.04
+
+COPY dependencies-ubuntu.sh /
+COPY sism /
+
+RUN /dependencies-ubuntu.sh
+
+CMD "/sism"

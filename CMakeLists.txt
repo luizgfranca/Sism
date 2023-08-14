@@ -22,7 +22,7 @@ include_directories(
     )
 
 add_executable(
-    app 
+    sism 
     main.cpp
     client/dbus/systemd/systemd-manager.cpp
     application/state.cpp
@@ -30,7 +30,18 @@ add_executable(
     )
 
 target_link_libraries(
-    app 
+    sism 
     PRIVATE SDBusCpp::sdbus-c++ 
     ${GTKMM_LIBRARIES}
     )
+
+include(GNUInstallDirs)
+
+install(IMPORTED_RUNTIME_ARTIFACTS SDBusCpp::sdbus-c++)
+
+include(GNUInstallDirs)
+install(
+    TARGETS sism
+)
+
+include(CPack)
