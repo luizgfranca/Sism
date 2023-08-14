@@ -20,6 +20,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <iostream>
+#include <memory>
 #include <ostream>
 #include <sdbus-c++/IProxy.h>
 #include <sdbus-c++/Message.h>
@@ -77,7 +78,8 @@ public:
     MainWindow();
     void stop_service(const int line);
     void start_service(const int line);
-    int get_current_row();
+    std::unique_ptr<Gtk::TreeModel::Path> get_current_row();
+    void set_row(Gtk::TreeModel::Path& tree_path);
     void load_grid_data();
 };
 
@@ -89,25 +91,28 @@ MainWindow* get_main_window() {
     return dynamic_cast<MainWindow*>(global_application->get_run_window());
 }
 
-int get_current_row(MainWindow* main_window) {
-    auto row = main_window->get_current_row();
-    return row;
+std::unique_ptr<Gtk::TreeModel::Path> get_current_row(MainWindow* main_window) {
+    return main_window->get_current_row();
 }
 
 void stop_clicked_signal_handler() {
     auto main_window = get_main_window();
-    main_window->stop_service(get_current_row(main_window));
+    auto current_row = get_current_row(main_window);
+    main_window->stop_service(std::stoi(current_row->to_string()));
     sleep(1);
     global_state.refresh();
     main_window->load_grid_data();
+    main_window->set_row(*current_row);
 }
 
 void start_clicked_signal_handler() {
     auto main_window = get_main_window();
-    main_window->start_service(get_current_row(main_window));
+    auto current_row = get_current_row(main_window);
+    main_window->start_service(std::stoi(current_row->to_string()));
     sleep(1);
     global_state.refresh();
     main_window->load_grid_data();
+    main_window->set_row(*current_row);
 }
 
 MainWindow::MainWindow() {
@@ -140,7 +145,6 @@ MainWindow::MainWindow() {
     set_titlebar(m_header_bar);
 }
 
-
 void MainWindow::add_grid_item(std::string name, std::string status, std::string description) {
     Gtk::TreeModel::Row row = *(m_tree_store->append());
     row[m_model.m_service_name] = name;
@@ -159,13 +163,17 @@ void MainWindow::start_service(const int line) {
     global_systemd_manager_client.start_unit(name);
 }
 
-int MainWindow::get_current_row() {
+std::unique_ptr<Gtk::TreeModel::Path> MainWindow::get_current_row() {
     auto selected_rows = m_treeview.get_selection()->get_selected_rows();
     if(selected_rows.size() > 0) {
-        return std::stoi(selected_rows[0].to_string());
+        return std::make_unique<Gtk::TreeModel::Path>(selected_rows.at(0));
     }
 
-    return -1;
+    return nullptr;
+}
+
+void MainWindow::set_row(Gtk::TreeModel::Path& tree_path) {
+    m_treeview.set_cursor(tree_path);
 }
 
 void MainWindow::load_grid_data() {
