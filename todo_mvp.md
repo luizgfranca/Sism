@@ -3,8 +3,7 @@
 - [x] when reloading grid, go back to the same position
 - [x] add a restart button
 - [x] make not loaded units not able to be restarted
-- [] create about button that opens a window 
-- [] make the window openned by about button show service's information
-- [] make double click on service also show informations
+- [x] create about button that opens a window 
+- [x] make the window openned by about button show service's information
 - [] make list auto-reload
 - [] research compilation of portable executable (or other distribution method if not easy)

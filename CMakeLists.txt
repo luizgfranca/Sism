@@ -12,11 +12,13 @@ link_directories(
     ${GTKMM_LIBRARY_DIRS}
     client/dbus/systemd
     application
+    component/service-property
     )
 include_directories(
     ${GTKMM_INCLUDE_DIRS}
     client/dbus/systemd
     application
+    component/service-property
     )
 
 add_executable(
@@ -24,6 +26,7 @@ add_executable(
     main.cpp
     client/dbus/systemd/systemd-manager.cpp
     application/state.cpp
+    component/service-property/service-property.cpp
     )
 
 target_link_libraries(

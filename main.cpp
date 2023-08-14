@@ -36,6 +36,7 @@
 #include "gtkmm/button.h"
 #include "gtkmm/enums.h"
 #include "gtkmm/headerbar.h"
+#include "gtkmm/label.h"
 #include "gtkmm/liststore.h"
 #include "gtkmm/scrolledwindow.h"
 #include "gtkmm/treemodel.h"
@@ -43,13 +44,14 @@
 #include "sigc++/functors/ptr_fun.h"
 #include <gtkmm-4.0/gtkmm.h>
 #include "application/state.h"
+#include "component/service-property/service-property.h"
 
 
 Glib::RefPtr<Gtk::Application> global_application = nullptr;
 client::dbus::systemd::SystemdManager global_systemd_manager_client;
 application::State global_state(global_systemd_manager_client);
 
-const int DEFAULT_RELOAD_WAITING_SECONDS = 2;
+const int DEFAULT_RELOAD_WAITING_SECONDS = 1;
 
 class MainWindow : public Gtk::Window {
 private:
@@ -75,6 +77,16 @@ private:
     Gtk::Button m_stop_button;
     Gtk::Button m_start_button;
     Gtk::Button m_restart_button;
+
+    component::ServiceProperty m_serviceproperty_title = component::ServiceProperty("Title:", "example.service");
+    component::ServiceProperty m_serviceproperty_description = component::ServiceProperty("Description:", "Example service description");
+    component::ServiceProperty m_serviceproperty_loaded = component::ServiceProperty("Loaded:", "loaded");
+    component::ServiceProperty m_serviceproperty_state = component::ServiceProperty("State:", "running/start");
+    component::ServiceProperty m_serviceproperty_followed = component::ServiceProperty("Following:", "other.service");
+    component::ServiceProperty m_serviceproperty_object_path = component::ServiceProperty("Object path:", "?");
+    
+    component::ServiceProperty m_serviceproperty_job_type = component::ServiceProperty("Type:", "type");
+    component::ServiceProperty m_serviceproperty_job_object_path = component::ServiceProperty("Object Path:", "type");
 
     void add_grid_item(std::string name, std::string status, std::string description);
 
@@ -133,7 +145,7 @@ void restart_clicked_signal_handler() {
 
 MainWindow::MainWindow() {
     set_title("Sism");
-    set_default_size(1000, 800);
+    set_default_size(1300, 800);
 
     m_tree_store = Gtk::ListStore::create(m_model);
     m_treeview.set_model(m_tree_store);
@@ -144,10 +156,19 @@ MainWindow::MainWindow() {
     // m_treeview.get_selection()->set_mode(Gtk::SelectionMode::SINGLE);
     m_treeview.signal_cursor_changed().connect(sigc::ptr_fun(row_selected_signal_handler));
 
-    Gtk::ScrolledWindow scroller;
-    scroller.set_child(m_treeview);
+    Gtk::ScrolledWindow service_grid_scroller;
+    service_grid_scroller.set_min_content_width(850);
+    service_grid_scroller.set_child(m_treeview);
 
-    set_child(scroller);
+    Gtk::ScrolledWindow service_information_scroller;
+    service_information_scroller.set_min_content_width(450);
+
+    Gtk::Box container;
+    container.set_halign(Gtk::Align::FILL);
+    container.append(service_grid_scroller);
+    container.append(service_information_scroller);
+
+    set_child(container);
 
     load_grid_data();
 
@@ -164,7 +185,24 @@ MainWindow::MainWindow() {
     m_header_bar.pack_end(m_start_button);
     m_header_bar.pack_end(m_restart_button);
     set_titlebar(m_header_bar);
+
+    Gtk::Box service_information_box;
+    service_information_scroller.set_child(service_information_box);
+
+    service_information_box.set_orientation(Gtk::Orientation::VERTICAL);
+    service_information_box.append(*(new component::ServiceProperty("Service details", "")));
+    service_information_box.append(m_serviceproperty_title);
+    service_information_box.append(m_serviceproperty_description);
+    service_information_box.append(m_serviceproperty_loaded);
+    service_information_box.append(m_serviceproperty_state);
+    service_information_box.append(m_serviceproperty_followed);
+    service_information_box.append(m_serviceproperty_object_path);
+    service_information_box.append(*(new component::ServiceProperty("", "")));
+    service_information_box.append(*(new component::ServiceProperty("Job currently processing", "")));
+    service_information_box.append(m_serviceproperty_job_type);
+    service_information_box.append(m_serviceproperty_job_object_path);
 }
+
 
 void MainWindow::add_grid_item(std::string name, std::string status, std::string description) {
     Gtk::TreeModel::Row row = *(m_tree_store->append());
@@ -175,6 +213,8 @@ void MainWindow::add_grid_item(std::string name, std::string status, std::string
 
 void MainWindow::on_row_selection() {
     auto selected = m_treeview.get_selection()->get_selected_rows();
+
+    if(selected.empty()) return;
 
     auto item = global_state.get_services_list()[std::stoi(selected.at(0).to_string())];
     auto service = item.get<0>();
@@ -187,6 +227,23 @@ void MainWindow::on_row_selection() {
         m_start_button.set_visible(true);
         m_restart_button.set_visible(true);
         m_stop_button.set_visible(true);
+    }
+
+    m_serviceproperty_title.set_value(item.get<0>());
+    m_serviceproperty_description.set_value(item.get<1>());
+    m_serviceproperty_loaded.set_value(item.get<2>());
+    m_serviceproperty_state.set_value(item.get<3>() + "/" + item.get<4>());
+    m_serviceproperty_followed.set_value(item.get<5>());
+    m_serviceproperty_object_path.set_value(item.get<6>());
+    
+    if(item.get<8>() == "") {
+        m_serviceproperty_job_type.set_visible(false);
+        m_serviceproperty_job_object_path.set_visible(false);
+    } else {
+        m_serviceproperty_job_type.set_visible(true);
+        m_serviceproperty_job_object_path.set_visible(true);
+        m_serviceproperty_job_type.set_value(item.get<8>());
+        m_serviceproperty_job_object_path.set_value(item.get<9>());
     }
 }
 
