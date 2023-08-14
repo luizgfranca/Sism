@@ -1,0 +1,10 @@
+- [] create script to compile and run project
+- [] order units list in alphabetical order
+- [] when reloading grid, go back to the same position
+- [] add a restart button
+- [] make not loaded units not able to be restarted
+- [] create about button that opens a window 
+- [] make the window openned by about button show service's information
+- [] make double click on service also show informations
+- [] make list auto-reload
+- [] research compilation of portable executable (or other distribution method if not easy)
