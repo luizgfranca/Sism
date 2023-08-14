@@ -1,4 +1,4 @@
-- [] create script to compile and run project
+- [x] create script to compile and run project
 - [] order units list in alphabetical order
 - [] when reloading grid, go back to the same position
 - [] add a restart button
