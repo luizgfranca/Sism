@@ -88,14 +88,18 @@ private:
 public:
     MainWindow() {
         set_title("Sism");
-        set_default_size(800, 800);
-        set_child(m_treeview);
+        set_default_size(1600, 800);
 
         m_tree_store = Gtk::ListStore::create(m_model);
         m_treeview.set_model(m_tree_store);
         m_treeview.append_column("Name", m_model.m_service_name);
         m_treeview.append_column("Status", m_model.m_service_status);
         m_treeview.append_column("Description", m_model.m_service_description);
+
+        Gtk::ScrolledWindow scroller;
+        scroller.set_child(m_treeview);
+
+        set_child(scroller);
 
         auto units = get_unit_list();
         for(auto unit : units) {
