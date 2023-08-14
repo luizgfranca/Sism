@@ -2,17 +2,6 @@
 #include <sdbus-c++/Types.h>
 
 
-
-
-
-
-
-
-
-
-
-
-
 namespace client::dbus::systemd {
     typedef     
     std::vector<
@@ -37,5 +26,6 @@ namespace client::dbus::systemd {
         SystemdManager();
         list_units_response_t list_units();
         void stop_unit(std::string unit_name);
+        void start_unit(std::string unit_name);
     };
 }

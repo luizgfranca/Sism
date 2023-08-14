@@ -3,5 +3,5 @@
  - [x] filter only services
  - [x] make grid show correctly state of services
  - [x] add button to stop service
- - [] add button to start service
+ - [x] add button to start service
  - [] make service grid reload when action is taken
