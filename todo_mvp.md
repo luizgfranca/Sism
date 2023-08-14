@@ -2,7 +2,7 @@
 - [x] order units list in alphabetical order
 - [x] when reloading grid, go back to the same position
 - [x] add a restart button
-- [] make not loaded units not able to be restarted
+- [x] make not loaded units not able to be restarted
 - [] create about button that opens a window 
 - [] make the window openned by about button show service's information
 - [] make double click on service also show informations

@@ -34,6 +34,7 @@
 #include "gtkmm/application.h"
 #include "gtkmm/box.h"
 #include "gtkmm/button.h"
+#include "gtkmm/enums.h"
 #include "gtkmm/headerbar.h"
 #include "gtkmm/liststore.h"
 #include "gtkmm/scrolledwindow.h"
@@ -85,10 +86,11 @@ public:
     std::unique_ptr<Gtk::TreeModel::Path> get_current_row();
     void set_row(Gtk::TreeModel::Path& tree_path);
     void load_grid_data();
+    void on_row_selection();
 };
 
-void row_selected_signal_handler(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column) {
-    dynamic_cast<MainWindow*>(global_application->get_run_window())->stop_service(std::stoi(path.to_string()));
+void row_selected_signal_handler() {
+    dynamic_cast<MainWindow*>(global_application->get_run_window())->on_row_selection();
 }
 
 MainWindow* get_main_window() {
@@ -139,7 +141,8 @@ MainWindow::MainWindow() {
     m_treeview.append_column("Status", m_model.m_service_status);
     m_treeview.append_column("Description", m_model.m_service_description);
 
-    m_treeview.signal_row_activated().connect(sigc::ptr_fun(row_selected_signal_handler));
+    // m_treeview.get_selection()->set_mode(Gtk::SelectionMode::SINGLE);
+    m_treeview.signal_cursor_changed().connect(sigc::ptr_fun(row_selected_signal_handler));
 
     Gtk::ScrolledWindow scroller;
     scroller.set_child(m_treeview);
@@ -168,6 +171,23 @@ void MainWindow::add_grid_item(std::string name, std::string status, std::string
     row[m_model.m_service_name] = name;
     row[m_model.m_service_status] = status;
     row[m_model.m_service_description] = description;
+}
+
+void MainWindow::on_row_selection() {
+    auto selected = m_treeview.get_selection()->get_selected_rows();
+
+    auto item = global_state.get_services_list()[std::stoi(selected.at(0).to_string())];
+    auto service = item.get<0>();
+    
+    if(item.get<2>() == "not-found") {
+        m_start_button.set_visible(false);
+        m_restart_button.set_visible(false);
+        m_stop_button.set_visible(false);
+    } else {
+        m_start_button.set_visible(true);
+        m_restart_button.set_visible(true);
+        m_stop_button.set_visible(true);
+    }
 }
 
 void MainWindow::stop_service(const int line) {
