@@ -9,6 +9,7 @@
 #include <sdbus-c++/sdbus-c++.h>
 #include <cstring>
 #include <string>
+#include <unistd.h>
 #include <vector>
 #include "glibmm/refptr.h"
 #include "gtkmm/application.h"
@@ -59,6 +60,7 @@ public:
     void stop_service(const int line);
     void start_service(const int line);
     int get_current_row();
+    void load_grid_data();
 };
 
 void row_selected_signal_handler(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column) {
@@ -79,17 +81,23 @@ void stop_clicked_signal_handler() {
     std::cout << "stop_clicked_signal_handler\n";
     auto main_window = get_main_window();
     main_window->stop_service(get_current_row(main_window));
+    sleep(1);
+    global_state.refresh();
+    main_window->load_grid_data();
 }
 
 void start_clicked_signal_handler() {
     std::cout << "start_clicked_signal_handler\n";
     auto main_window = get_main_window();
     main_window->start_service(get_current_row(main_window));
+    sleep(1);
+    global_state.refresh();
+    main_window->load_grid_data();
 }
 
 MainWindow::MainWindow() {
     set_title("Sism");
-    set_default_size(1600, 800);
+    set_default_size(1000, 800);
 
     m_tree_store = Gtk::ListStore::create(m_model);
     m_treeview.set_model(m_tree_store);
@@ -104,9 +112,7 @@ MainWindow::MainWindow() {
 
     set_child(scroller);
 
-    for(auto service : global_state.get_services_list()) {
-        add_grid_item(service.get<0>(), service.get<4>(), service.get<1>());
-    }
+    load_grid_data();
 
     m_stop_button.set_label("Stop");
     m_stop_button.signal_clicked().connect(sigc::ptr_fun(stop_clicked_signal_handler));
@@ -147,6 +153,16 @@ int MainWindow::get_current_row() {
     }
 
     return -1;
+}
+
+void MainWindow::load_grid_data() {
+    m_tree_store->clear();
+
+    std::cout << "size: "<< global_state.get_services_list().size() << "\n";
+
+    for(auto service : global_state.get_services_list()) {
+        add_grid_item(service.get<0>(), service.get<4>(), service.get<1>());
+    }
 }
 
 int main(int argc, char **argv) {

@@ -24,13 +24,13 @@ client::dbus::systemd::list_units_response_t& State::get_units_list() {
 }
 
 client::dbus::systemd::list_units_response_t& State::get_services_list() {
-    static client::dbus::systemd::list_units_response_t services_list;
+    client::dbus::systemd::list_units_response_t* services_list = new client::dbus::systemd::list_units_response_t;
 
      for(auto unit : get_units_list()) {
        if(unit.get<0>().ends_with(".service")) {
-         services_list.push_back(unit);
+         services_list->push_back(unit);
        }
      }
 
-     return services_list;
+     return *services_list;
 }
