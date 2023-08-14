@@ -18,12 +18,15 @@
 
 #include "../client/dbus/systemd/systemd-manager.h"
 #include <memory>
+#include <mutex>
 
 namespace application {
     class State { 
         client::dbus::systemd::SystemdManager* m_systemd_manager;
         client::dbus::systemd::list_units_response_t m_units_list;
         
+        std::mutex m_mutation_lock;
+
         void load();
         void sort_units();
     public:

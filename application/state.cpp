@@ -57,11 +57,15 @@ void State::load() {
 
 State::State(client::dbus::systemd::SystemdManager& systemd_manager) {
     m_systemd_manager = &systemd_manager;
+    m_mutation_lock.lock();
     load();
+    m_mutation_lock.unlock();
 }
 
 void State::refresh() {
+    m_mutation_lock.lock();
     load();
+    m_mutation_lock.unlock();
 }
 
 client::dbus::systemd::list_units_response_t& State::get_units_list() {
