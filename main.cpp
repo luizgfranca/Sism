@@ -85,6 +85,7 @@ private:
     Gtk::Button m_stop_button;
     Gtk::Button m_start_button;
     Gtk::Button m_restart_button;
+    Gtk::Button m_refresh_button;
 
     component::ServiceProperty m_serviceproperty_title = component::ServiceProperty("Title:", "example.service");
     component::ServiceProperty m_serviceproperty_description = component::ServiceProperty("Description:", "Example service description");
@@ -154,14 +155,14 @@ void restart_clicked_signal_handler() {
     // main_window->set_row(*current_row);
 }
 
-void background_reload(MainWindow* window) {
-    while(true) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        std::cout << "refreshing grid\n";
-        global_state.refresh();
-        window->notify_data_refresh();
-    }
-}
+// void background_reload(MainWindow* window) {
+//     while(true) {
+//         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+//         std::cout << "refreshing grid\n";
+//         global_state.refresh();
+//         window->notify_data_refresh();
+//     }
+// }
 
 MainWindow::MainWindow() {
     set_title("Sism");
@@ -204,9 +205,13 @@ MainWindow::MainWindow() {
     m_restart_button.set_label("Restart");
     m_restart_button.signal_clicked().connect(sigc::ptr_fun(start_clicked_signal_handler));
 
+    m_refresh_button.set_label("Refresh");
+    m_refresh_button.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_dataset_change));
+
     m_header_bar.pack_end(m_stop_button);
     m_header_bar.pack_end(m_start_button);
     m_header_bar.pack_end(m_restart_button);
+    m_header_bar.pack_end(m_refresh_button);
     set_titlebar(m_header_bar);
 
     Gtk::Box service_information_box;
@@ -225,8 +230,8 @@ MainWindow::MainWindow() {
     service_information_box.append(m_serviceproperty_job_type);
     service_information_box.append(m_serviceproperty_job_object_path);
 
-    m_background_reloader_thread = new std::thread([this]{background_reload(this);});
-    m_update_data_notification_dispatcher.connect(sigc::mem_fun(*this, &MainWindow::on_dataset_change));
+    // m_background_reloader_thread = new std::thread([this]{background_reload(this);});
+    // m_update_data_notification_dispatcher.connect();
 }
 
 
@@ -304,12 +309,10 @@ void MainWindow::set_row(Gtk::TreeModel::Path& tree_path) {
 }
 
 void MainWindow::load_grid_data() {
-    std::cout << "load_grid_data\n";
 
     auto position = get_current_row();
     m_tree_store_mutex.lock();
     m_tree_store->clear();
-    std::cout << "cleared tree store\n";
 
     for(auto service : global_state.get_services_list()) {
         add_grid_item(service.get<0>(), service.get<4>(), service.get<1>());
