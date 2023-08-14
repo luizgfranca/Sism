@@ -1,6 +1,6 @@
  - [x] separate systemd dbus code from the rest
  - [x] create separate object to hold state
  - [x] filter only services
- - [] make grid show correctly state of services
+ - [x] make grid show correctly state of services
  - [] add button to stop service
  - [] add button to start service

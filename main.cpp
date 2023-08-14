@@ -76,7 +76,7 @@ MainWindow::MainWindow() {
     set_child(scroller);
 
     for(auto service : global_state.get_services_list()) {
-        add_grid_item(service.get<0>(), service.get<2>(), service.get<1>());
+        add_grid_item(service.get<0>(), service.get<4>(), service.get<1>());
     }
 }
 
