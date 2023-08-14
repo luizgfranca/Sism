@@ -16,6 +16,8 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// REFERENCE DOCUMENTATION: https://www.freedesktop.org/wiki/Software/systemd/dbus/
+
 #include <sdbus-c++/IProxy.h>
 #include <sdbus-c++/Types.h>
 
@@ -47,5 +49,6 @@ namespace client::dbus::systemd {
         list_units_response_t list_units();
         void stop_unit(std::string unit_name);
         void start_unit(std::string unit_name);
+        void reload_or_restart_unit(std::string unit_name);
     };
 }

@@ -28,6 +28,9 @@ const char* DBUS_SYSTEMD_MANAGER_INTERFACE = "org.freedesktop.systemd1.Manager";
 const char* DBUS_SYSTEMD_MANAGER_LIST_UNITS_METHOD = "ListUnits";
 const char* DBUS_SYSTEMD_MANAGER_STOP_UNIT_METHOD = "StopUnit";
 const char* DBUS_SYSTEMD_MANAGER_START_UNIT_METHOD = "StartUnit";
+const char* DBUS_SYSTEMD_MANAGER_RELOAD_OR_RESTART_UNIT_METHOD = "ReloadOrRestartUnit";
+
+const char* DEFAULT_MODE = "replace";
 
 SystemdManager::SystemdManager() {
     this->proxy = sdbus::createProxy(
@@ -51,7 +54,7 @@ void SystemdManager::stop_unit(std::string unit_name) {
     sdbus::ObjectPath result;
     proxy->callMethod(DBUS_SYSTEMD_MANAGER_STOP_UNIT_METHOD)
         .onInterface(DBUS_SYSTEMD_MANAGER_INTERFACE)
-        .withArguments(unit_name, "replace")
+        .withArguments(unit_name, DEFAULT_MODE)
         .storeResultsTo(result);
 }
 
@@ -60,6 +63,14 @@ void SystemdManager::start_unit(std::string unit_name) {
     sdbus::ObjectPath result;
     proxy->callMethod(DBUS_SYSTEMD_MANAGER_START_UNIT_METHOD)
         .onInterface(DBUS_SYSTEMD_MANAGER_INTERFACE)
-        .withArguments(unit_name, "replace")
+        .withArguments(unit_name, DEFAULT_MODE)
+        .storeResultsTo(result);
+}
+
+void SystemdManager::reload_or_restart_unit(std::string unit_name) {
+    sdbus::ObjectPath result;
+    proxy->callMethod(DBUS_SYSTEMD_MANAGER_RELOAD_OR_RESTART_UNIT_METHOD)
+        .onInterface(DBUS_SYSTEMD_MANAGER_INTERFACE)
+        .withArguments(unit_name, DEFAULT_MODE)
         .storeResultsTo(result);
 }

@@ -48,6 +48,8 @@ Glib::RefPtr<Gtk::Application> global_application = nullptr;
 client::dbus::systemd::SystemdManager global_systemd_manager_client;
 application::State global_state(global_systemd_manager_client);
 
+const int DEFAULT_RELOAD_WAITING_SECONDS = 2;
+
 class MainWindow : public Gtk::Window {
 private:
     class ColumnModel : public Gtk::TreeModel::ColumnRecord {
@@ -71,6 +73,7 @@ private:
     Gtk::HeaderBar m_header_bar;
     Gtk::Button m_stop_button;
     Gtk::Button m_start_button;
+    Gtk::Button m_restart_button;
 
     void add_grid_item(std::string name, std::string status, std::string description);
 
@@ -78,6 +81,7 @@ public:
     MainWindow();
     void stop_service(const int line);
     void start_service(const int line);
+    void restart_service(const int line);
     std::unique_ptr<Gtk::TreeModel::Path> get_current_row();
     void set_row(Gtk::TreeModel::Path& tree_path);
     void load_grid_data();
@@ -99,7 +103,7 @@ void stop_clicked_signal_handler() {
     auto main_window = get_main_window();
     auto current_row = get_current_row(main_window);
     main_window->stop_service(std::stoi(current_row->to_string()));
-    sleep(1);
+    sleep(DEFAULT_RELOAD_WAITING_SECONDS);
     global_state.refresh();
     main_window->load_grid_data();
     main_window->set_row(*current_row);
@@ -109,7 +113,17 @@ void start_clicked_signal_handler() {
     auto main_window = get_main_window();
     auto current_row = get_current_row(main_window);
     main_window->start_service(std::stoi(current_row->to_string()));
-    sleep(1);
+    sleep(DEFAULT_RELOAD_WAITING_SECONDS);
+    global_state.refresh();
+    main_window->load_grid_data();
+    main_window->set_row(*current_row);
+}
+
+void restart_clicked_signal_handler() {
+    auto main_window = get_main_window();
+    auto current_row = get_current_row(main_window);
+    main_window->restart_service(std::stoi(current_row->to_string()));
+    sleep(DEFAULT_RELOAD_WAITING_SECONDS);
     global_state.refresh();
     main_window->load_grid_data();
     main_window->set_row(*current_row);
@@ -140,8 +154,12 @@ MainWindow::MainWindow() {
     m_start_button.set_label("Start");
     m_start_button.signal_clicked().connect(sigc::ptr_fun(start_clicked_signal_handler));
 
+    m_restart_button.set_label("Restart");
+    m_restart_button.signal_clicked().connect(sigc::ptr_fun(start_clicked_signal_handler));
+
     m_header_bar.pack_end(m_stop_button);
     m_header_bar.pack_end(m_start_button);
+    m_header_bar.pack_end(m_restart_button);
     set_titlebar(m_header_bar);
 }
 
@@ -161,6 +179,12 @@ void MainWindow::stop_service(const int line) {
 void MainWindow::start_service(const int line) {
     const auto name = global_state.get_services_list()[line].get<0>();
     global_systemd_manager_client.start_unit(name);
+}
+
+
+void MainWindow::restart_service(const int line) {
+    const auto name = global_state.get_services_list()[line].get<0>();
+    global_systemd_manager_client.reload_or_restart_unit(name);
 }
 
 std::unique_ptr<Gtk::TreeModel::Path> MainWindow::get_current_row() {
