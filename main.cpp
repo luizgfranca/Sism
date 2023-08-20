@@ -310,6 +310,8 @@ void MainWindow::set_row(Gtk::TreeModel::Path& tree_path) {
 
 void MainWindow::load_grid_data() {
 
+    std::cout << "load_grid_data";
+
     auto position = get_current_row();
     m_tree_store_mutex.lock();
     m_tree_store->clear();
@@ -324,7 +326,7 @@ void MainWindow::load_grid_data() {
 }
 
 void MainWindow::on_dataset_change() {
-    // global_state.refresh();
+    global_state.refresh();
     load_grid_data();
 }
 
