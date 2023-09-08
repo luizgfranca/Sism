@@ -10,23 +10,51 @@ pkg_check_modules(GTKMM gtkmm-4.0)
 
 link_directories(
     ${GTKMM_LIBRARY_DIRS}
-    client/dbus/systemd
     application
-    component/service-property
+    application/controller
+    application/ui
+    application/ui/component
+    application/ui/component/service-property
+    graphics
+    module
+    module/services
+    module/string-tools
+    provider
+    provider/dbus
+    provider/dbus/systemd
+    provider/dbus/systemd/dto
+    provider/systemd
+    tools
     )
+
 include_directories(
     ${GTKMM_INCLUDE_DIRS}
-    client/dbus/systemd
+    module/string-tools
+    provider/dbus
+    provider/dbus/systemd
+    provider/dbus/systemd/dto
+    provider/systemd
+    module/services
+    application/controller
+    application/ui
+    application/ui/component
+    application/ui/component/service-property
     application
-    component/service-property
     )
 
 add_executable(
     sism 
+    module/string-tools/to-uppercase.cpp
+    provider/dbus/systemd/dto/unit-operation-mode.cpp
+    provider/systemd/unit.cpp
+    provider/systemd/systemd-provider.cpp
+    provider/dbus/systemd/systemd-manager.cpp
+    module/services/system-services-manager.cpp
+    application/controller/system-services-controller.cpp
+    application/ui/component/service-property/service-property.cpp
+    application/ui/main-window.cpp
+    application/application.cpp
     main.cpp
-    client/dbus/systemd/systemd-manager.cpp
-    application/state.cpp
-    component/service-property/service-property.cpp
     )
 
 target_link_libraries(

@@ -2,7 +2,7 @@
 #include "gtkmm/label.h"
 #include <string>
 
-namespace component {
+namespace application::ui::component {
 
     class ServiceProperty : public Gtk::Box {
         Gtk::Label m_name_label;

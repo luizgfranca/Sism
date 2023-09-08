@@ -4,7 +4,7 @@
 #include "gtkmm/enums.h"
 #include <string>
 
-using namespace component;
+using namespace application::ui::component;
 
 void ServiceProperty::configure() {
     auto text_size_provider = Gtk::CssProvider::create();
