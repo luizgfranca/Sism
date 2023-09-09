@@ -1,6 +1,7 @@
 #include "main-window.h"
 #include "gtkmm/scrolledwindow.h"
 #include <optional>
+#include <unistd.h>
 
 using namespace application::ui;
 
@@ -42,7 +43,7 @@ MainWindow::MainWindow(SismApplication *application) {
     m_stop_button.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_stop_service_click));
 
     m_start_button.set_label("Start");
-    m_start_button.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_refresh_service_list_click));
+    m_start_button.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_start_service_click));
 
     m_restart_button.set_label("Restart");
     m_restart_button.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_restart_service_click));
@@ -74,12 +75,18 @@ MainWindow::MainWindow(SismApplication *application) {
 }
 
 
+void MainWindow::reload_dataset() {
+    m_application->system_services_controller().refresh();
+    load_grid_data();    
+}
+
 void MainWindow::add_grid_item(const provider::systemd::Unit& unit) {
     Gtk::TreeModel::Row row = *(m_tree_store->append());
     row[m_model.m_service_name] = unit.name;
     row[m_model.m_service_status] = unit.sub_state;
     row[m_model.m_service_description] = unit.description;
 }
+
 
 void MainWindow::on_row_selection() {
     auto maybe_item = get_service_from_currently_selected_row();
@@ -129,6 +136,9 @@ void MainWindow::on_stop_service_click() {
     if(!maybe_service.has_value()) return;
 
     m_application->system_services_controller().stop(maybe_service.value());
+
+    sleep(SECONDS_TO_REFRESH_DATASET_AFTER_ACTION);
+    reload_dataset();
 }
 
 
@@ -137,6 +147,9 @@ void MainWindow::on_start_service_click() {
     if(!maybe_service.has_value()) return;
 
     m_application->system_services_controller().start(maybe_service.value());
+    
+    sleep(SECONDS_TO_REFRESH_DATASET_AFTER_ACTION);
+    reload_dataset();
 }
 
 
@@ -145,6 +158,9 @@ void MainWindow::on_restart_service_click() {
     if(!maybe_service.has_value()) return;
 
     m_application->system_services_controller().restart(maybe_service.value());
+
+    sleep(SECONDS_TO_REFRESH_DATASET_AFTER_ACTION);
+    reload_dataset();
 }
 
 std::unique_ptr<Gtk::TreeModel::Path> MainWindow::get_currently_selected_row_number() {

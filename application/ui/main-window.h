@@ -16,6 +16,8 @@ namespace application::ui {
     const int DEFAULT_WIDTH = 1300;
     const int DEFAULT_HEIGHT = 800;
 
+    const int SECONDS_TO_REFRESH_DATASET_AFTER_ACTION = 1;
+
     class MainWindow : public Gtk::Window {
     private:
         SismApplication *m_application;
@@ -68,6 +70,7 @@ namespace application::ui {
         std::unique_ptr<Gtk::TreeModel::Path> get_currently_selected_row_number();
         void set_selected_row_number(Gtk::TreeModel::Path& tree_path);
         void load_grid_data();
+        void reload_dataset();
 
         std::optional<provider::systemd::Unit> get_service_from_currently_selected_row();        
         
