@@ -1,3 +1,10 @@
+
+
+if [ "$1" == "" ]; then
+    echo 'usage: ./tools/release <version>'
+    exit
+fi
+
 cd build
 cmake ..
 make

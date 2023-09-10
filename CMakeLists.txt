@@ -4,6 +4,8 @@ project(Sism)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(VERSION 0.4.0)
+
 find_package(sdbus-c++ REQUIRED)
 find_package(PkgConfig)
 pkg_check_modules(GTKMM gtkmm-4.0)
@@ -65,11 +67,20 @@ target_link_libraries(
 
 include(GNUInstallDirs)
 
-install(IMPORTED_RUNTIME_ARTIFACTS SDBusCpp::sdbus-c++)
+#install(IMPORTED_RUNTIME_ARTIFACTS SDBusCpp::sdbus-c++)
 
 include(GNUInstallDirs)
 install(
     TARGETS sism
 )
+
+set(CPACK_PACKAGE_VERSION ${VERSION})
+set(CPACK_GENERATOR "RPM")
+set(CPACK_PACKAGE_NAME "sism")
+set(CPACK_PACKAGE_RELEASE 1)
+set(CPACK_PACKAGE_CONTACT "luizgfc@proton.me")
+set(CPACK_PACKAGE_VENDOR "Sism")
+set(CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CMAKE_SYSTEM_PROCESSOR}")
 
 include(CPack)
