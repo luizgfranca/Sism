@@ -39,9 +39,9 @@ namespace provider::dbus::systemd {
          * and hence there might be more unit names loaded than actual units behind them. 
          * TODO: identify this situation and present it to the user
         */
-        dto::list_units_response_t list_units();
-        void stop_unit(std::string unit_name, dto::UnitOperationMode mode);
-        void start_unit(std::string unit_name, dto::UnitOperationMode mode);
-        void reload_or_restart_unit(std::string unit_name, dto::UnitOperationMode mode);
+        list_units_response_t list_units();
+        void stop_unit(std::string unit_name, UnitOperationMode mode);
+        void start_unit(std::string unit_name, UnitOperationMode mode);
+        void reload_or_restart_unit(std::string unit_name, UnitOperationMode mode);
     };
 }

@@ -83,7 +83,7 @@ namespace provider::systemd {
         std::shared_ptr<Job> get_running_job() { return m_running_job; }
 
         static std::unique_ptr<std::vector<Unit>> from_dbus_list_units_response(
-            provider::dbus::systemd::dto::list_units_response_t response
+            provider::dbus::systemd::list_units_response_t response
         );
 
         static void sort_by_name_inplace(std::shared_ptr<std::vector<Unit>> units);

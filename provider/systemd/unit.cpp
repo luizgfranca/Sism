@@ -25,7 +25,7 @@
 using namespace provider::systemd;
 
 std::unique_ptr<std::vector<Unit>> Unit::from_dbus_list_units_response(
-    provider::dbus::systemd::dto::list_units_response_t response
+    provider::dbus::systemd::list_units_response_t response
 ) {
     auto list = std::make_unique<std::vector<Unit>>();
 

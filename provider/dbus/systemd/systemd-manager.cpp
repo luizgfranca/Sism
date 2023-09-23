@@ -33,8 +33,8 @@ SystemdManager::SystemdManager() {
     proxy->finishRegistration();
 }
 
-dto::list_units_response_t SystemdManager::list_units() {
-    dto::list_units_response_t result;
+list_units_response_t SystemdManager::list_units() {
+    list_units_response_t result;
     proxy->callMethod(manager::method::LIST_UNITS_METHOD)
         .onInterface(manager::INTERFACE_NAME)
         .storeResultsTo(result);
@@ -42,27 +42,27 @@ dto::list_units_response_t SystemdManager::list_units() {
     return result;
 }
 
-void SystemdManager::stop_unit(std::string unit_name, dto::UnitOperationMode mode) {
+void SystemdManager::stop_unit(std::string unit_name, UnitOperationMode mode) {
     sdbus::ObjectPath result;
     proxy->callMethod(manager::method::STOP_UNIT_METHOD)
         .onInterface(manager::INTERFACE_NAME)
-        .withArguments(unit_name, dto::to_string(mode))
+        .withArguments(unit_name, to_string(mode))
         .storeResultsTo(result);
 }
 
 
-void SystemdManager::start_unit(std::string unit_name, dto::UnitOperationMode mode) {
+void SystemdManager::start_unit(std::string unit_name, UnitOperationMode mode) {
     sdbus::ObjectPath result;
     proxy->callMethod(manager::method::START_UNIT_METHOD)
         .onInterface(manager::INTERFACE_NAME)
-        .withArguments(unit_name, dto::to_string(mode))
+        .withArguments(unit_name, to_string(mode))
         .storeResultsTo(result);
 }
 
-void SystemdManager::reload_or_restart_unit(std::string unit_name, dto::UnitOperationMode mode) {
+void SystemdManager::reload_or_restart_unit(std::string unit_name, UnitOperationMode mode) {
     sdbus::ObjectPath result;
     proxy->callMethod(manager::method::RELOAD_OR_RESTART_UNIT_METHOD)
         .onInterface(manager::INTERFACE_NAME)
-        .withArguments(unit_name, dto::to_string(mode))
+        .withArguments(unit_name, to_string(mode))
         .storeResultsTo(result);
 }

@@ -19,7 +19,7 @@
 
 #include "unit-operation-mode.h"
 
-using namespace provider::dbus::systemd::dto;
+using namespace provider::dbus::systemd;
 
 const std::string start_unit_mode_strs[] = {
     "replace",
@@ -29,6 +29,6 @@ const std::string start_unit_mode_strs[] = {
     "ignore-requirements"
 };
 
-std::string provider::dbus::systemd::dto::to_string(UnitOperationMode mode) {
+std::string provider::dbus::systemd::to_string(UnitOperationMode mode) {
     return start_unit_mode_strs[mode];
 }

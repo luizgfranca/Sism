@@ -22,7 +22,7 @@
 #include <cstdint>
 #include <string>
 
-namespace provider::dbus::systemd::dto {
+namespace provider::dbus::systemd {
     enum UnitOperationMode : uint8_t {
         // the call will start the unit and its dependencies, 
         // possibly replacing already queued jobs that conflict with this. 

@@ -19,7 +19,7 @@
 
 #include <sdbus-c++/Types.h>
 
-namespace provider::dbus::systemd::dto {
+namespace provider::dbus::systemd {
     
     typedef 
     sdbus::Struct<
