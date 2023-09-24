@@ -20,6 +20,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 #include <vector>
 #include "unit.h"
 #include "../dbus/systemd/systemd-manager.h"
@@ -27,7 +28,7 @@
 namespace provider::systemd {
     class SystemdProvider {
         std::unique_ptr<dbus::systemd::SystemdManager> m_dbus_systemd_manager_interface;
-
+        std::shared_ptr<std::vector<std::string>> m_unit_paths;
     public:
         // TODO use dependency injection for Systemd interfaces
         SystemdProvider();

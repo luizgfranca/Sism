@@ -21,4 +21,8 @@
 
 namespace provider::dbus::systemd::manager {
     const std::string INTERFACE_NAME = "org.freedesktop.systemd1.Manager";
+
+    namespace property_name {
+        const std::string UNITS_PATH = "UnitPath";
+    }
 }

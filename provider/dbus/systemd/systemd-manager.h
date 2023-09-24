@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include <memory>
 #include <sdbus-c++/IProxy.h>
 #include "dto/dto.h"
 
@@ -39,6 +40,9 @@ namespace provider::dbus::systemd {
          * and hence there might be more unit names loaded than actual units behind them. 
          * TODO: identify this situation and present it to the user
         */
+
+        std::shared_ptr<std::vector<std::string>> get_unit_paths_property();
+
         list_units_response_t list_units();
         void stop_unit(std::string unit_name, UnitOperationMode mode);
         void start_unit(std::string unit_name, UnitOperationMode mode);

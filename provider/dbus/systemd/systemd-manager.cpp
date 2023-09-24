@@ -18,6 +18,7 @@
 
 #include "systemd-manager.h"
 #include <sdbus-c++/IProxy.h>
+#include <vector>
 #include "properties.h"
 #include "interface-properties.h"
 #include "method-names.h"
@@ -65,4 +66,12 @@ void SystemdManager::reload_or_restart_unit(std::string unit_name, UnitOperation
         .onInterface(manager::INTERFACE_NAME)
         .withArguments(unit_name, to_string(mode))
         .storeResultsTo(result);
+}
+
+std::shared_ptr<std::vector<std::string>> SystemdManager::get_unit_paths_property() {
+    return std::make_shared<std::vector<std::string>>(
+        proxy->getProperty(manager::property_name::UNITS_PATH)
+            .onInterface(manager::INTERFACE_NAME)
+            .get<std::vector<std::string>>()
+    );
 }
