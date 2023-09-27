@@ -17,22 +17,16 @@
  */
 
 
-#pragma once
+#include <sdbus-c++/Types.h>
+#include <vector>
 
-#include "../module/system-services-manager/system-services-manager.h"
+namespace provider::dbus::systemd {
 
-namespace application::controller {
-    class SystemServicesController {
-        // TOOD: Use dependency injection
-        module::services::SystemServicesManager m_manager;
+    typedef sdbus::Struct<
+        std::string, // unit file path
+        std::string // is the unit file enables
+    > list_unit_files_response_unit_file_t;
 
-        std::shared_ptr<std::vector<provider::systemd::Unit>> m_services;
+    typedef std::vector<list_unit_files_response_unit_file_t> list_unit_files_response_t;
 
-    public:
-        void refresh();
-        std::shared_ptr<std::vector<provider::systemd::Unit>> get_services();
-        void start(const provider::systemd::Unit& service);
-        void stop(const provider::systemd::Unit& service);
-        void restart(const provider::systemd::Unit& service);
-    };
 }

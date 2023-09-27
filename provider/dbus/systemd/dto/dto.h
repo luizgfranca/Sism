@@ -19,3 +19,4 @@
 
 #include "list-units-response.h"
 #include "unit-operation-mode.h"
+#include "list-unit-files-response.h"

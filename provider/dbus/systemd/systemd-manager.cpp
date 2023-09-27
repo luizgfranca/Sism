@@ -43,6 +43,16 @@ list_units_response_t SystemdManager::list_units() {
     return result;
 }
 
+list_unit_files_response_t SystemdManager::list_unit_files() {
+    list_unit_files_response_t result;
+    proxy->callMethod(manager::method::LIST_UNIT_FILES_METHOD)
+        .onInterface(manager::INTERFACE_NAME)
+        .storeResultsTo(result);
+
+    return result;
+}
+
+
 void SystemdManager::stop_unit(std::string unit_name, UnitOperationMode mode) {
     sdbus::ObjectPath result;
     proxy->callMethod(manager::method::STOP_UNIT_METHOD)

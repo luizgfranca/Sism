@@ -19,8 +19,9 @@ link_directories(
     application/ui/component/service-property
     graphics
     module
-    module/services
+    module/system-services-manager
     module/string-tools
+    module/logger
     provider
     provider/dbus
     provider/dbus/systemd
@@ -36,7 +37,8 @@ include_directories(
     provider/dbus/systemd
     provider/dbus/systemd/dto
     provider/systemd
-    module/services
+    module/system-services-manager
+    module/logger
     application/controller
     application/ui
     application/ui/component
@@ -48,10 +50,11 @@ add_executable(
     sism 
     module/string-tools/to-uppercase.cpp
     provider/dbus/systemd/dto/unit-operation-mode.cpp
+    provider/systemd/unit-file.cpp
     provider/systemd/unit.cpp
     provider/systemd/systemd-provider.cpp
     provider/dbus/systemd/systemd-manager.cpp
-    module/services/system-services-manager.cpp
+    module/system-services-manager/system-services-manager.cpp
     application/controller/system-services-controller.cpp
     application/ui/component/service-property/service-property.cpp
     application/ui/main-window.cpp

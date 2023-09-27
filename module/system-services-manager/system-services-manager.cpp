@@ -18,6 +18,7 @@
 
 
 #include "system-services-manager.h"
+#include "unit.h"
 #include <memory>
 #include <utility>
 
@@ -36,14 +37,8 @@ void SystemServicesManager::restart_service(const provider::systemd::Unit& servi
 }
 
 std::shared_ptr<std::vector<provider::systemd::Unit>> SystemServicesManager::get_services_list() {
-    auto units = m_systemd_provider.list_units();
-    std::vector<provider::systemd::Unit> services;
-
-    for(const auto unit : *units) {
-        if(unit.name.ends_with(".service")) {
-            services.push_back(unit);
-        }
-    }
-
-    return std::move( std::make_shared<std::vector<provider::systemd::Unit>>(services) );
+    return provider::systemd::Unit::filter_by_type(
+        m_systemd_provider.list_all_units(), 
+        "service"
+    );
 }

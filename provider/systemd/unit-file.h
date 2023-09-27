@@ -17,27 +17,34 @@
  */
 
 
-#pragma once
-
+#include <cstdint>
 #include <memory>
 #include <string>
 #include <vector>
-#include "unit.h"
-#include "../dbus/systemd/systemd-manager.h"
+#include "../dbus/systemd/dto/dto.h"
+
 
 namespace provider::systemd {
-    class SystemdProvider {
-        std::unique_ptr<dbus::systemd::SystemdManager> m_dbus_systemd_manager_interface;
-        std::shared_ptr<std::vector<std::string>> m_unit_paths;
+    class UnitFile {
     public:
-        // TODO use dependency injection for Systemd interfaces
-        SystemdProvider();
+        std::string name;
+        std::string containing_folder;
+        std::string complete_path;
+        std::string enablement_status;
 
-        std::shared_ptr<std::vector<Unit>> list_loaded_or_once_loaded_units();
-        std::shared_ptr<std::vector<Unit>> list_all_units();
-        void start_unit(const Unit& unit);
-        void stop_unit(const Unit& unit);
-        void reload_or_restart_unit(const Unit& unit);
+        UnitFile(
+            std::string name,
+            std::string containing_folder,
+            std::string complete_path,
+            std::string enablement_status
+        ):
+            name(name),
+            containing_folder(containing_folder),
+            complete_path(complete_path),
+            enablement_status(enablement_status) {}
+
+        static UnitFile from_list_unit_file_response_item(dbus::systemd::list_unit_files_response_unit_file_t& unit_file);
+        static std::vector<UnitFile> from_list_unit_file_response(dbus::systemd::list_unit_files_response_t& response);
+        static void sort_by_name_inplace(std::shared_ptr<std::vector<UnitFile>> unit_files);
     };
 }
-

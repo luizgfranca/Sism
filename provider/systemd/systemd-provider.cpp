@@ -18,6 +18,7 @@
 
 
 #include "systemd-provider.h"
+#include "unit.h"
 #include <format>
 #include <iostream>
 #include <memory>
@@ -55,7 +56,17 @@ void SystemdProvider::reload_or_restart_unit(const Unit& unit) {
     );
 }
 
-std::unique_ptr<std::vector<Unit>> SystemdProvider::list_units() {
+std::shared_ptr<std::vector<Unit>> SystemdProvider::list_loaded_or_once_loaded_units() {
     auto response = m_dbus_systemd_manager_interface->list_units();   
     return std::move(Unit::from_dbus_list_units_response(response));
+}
+
+std::shared_ptr<std::vector<Unit>> SystemdProvider::list_all_units() {
+    auto list_units_response = m_dbus_systemd_manager_interface->list_units();
+    auto list_unit_files_response = m_dbus_systemd_manager_interface->list_unit_files();
+    
+    return Unit::from_dbus_list_units_and_list_files_response(
+        list_units_response,
+        list_unit_files_response
+    );
 }

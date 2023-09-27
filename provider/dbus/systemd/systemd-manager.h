@@ -44,6 +44,8 @@ namespace provider::dbus::systemd {
         std::shared_ptr<std::vector<std::string>> get_unit_paths_property();
 
         list_units_response_t list_units();
+        list_unit_files_response_t list_unit_files();
+
         void stop_unit(std::string unit_name, UnitOperationMode mode);
         void start_unit(std::string unit_name, UnitOperationMode mode);
         void reload_or_restart_unit(std::string unit_name, UnitOperationMode mode);

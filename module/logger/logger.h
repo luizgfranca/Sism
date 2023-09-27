@@ -16,23 +16,13 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <iostream>
+#include <string>
+#include <format>
 
-#pragma once
-
-#include "../module/system-services-manager/system-services-manager.h"
-
-namespace application::controller {
-    class SystemServicesController {
-        // TOOD: Use dependency injection
-        module::services::SystemServicesManager m_manager;
-
-        std::shared_ptr<std::vector<provider::systemd::Unit>> m_services;
-
-    public:
-        void refresh();
-        std::shared_ptr<std::vector<provider::systemd::Unit>> get_services();
-        void start(const provider::systemd::Unit& service);
-        void stop(const provider::systemd::Unit& service);
-        void restart(const provider::systemd::Unit& service);
-    };
+namespace module::logger {
+    template<typename... T>
+    void debug(std::format_string<T...> __fmt, T&&... __args) {
+        std::cout << "[DEBUG] " + std::format( __fmt, __args...) + "\n";
+    }
 }
