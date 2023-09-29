@@ -22,12 +22,12 @@ Current supported distributions are `Fedora 38` and `Ubuntu 23.04`.
 
 ### Fedora 38
 The project has an RPM package that can be used for the fedora 38 installation:
- - Download the `sism-0.4.0-1.x86_64.rpm`
- - Run `sudo dnf install sism-0.4.0-1.x86_64.rpm`
+ - Download the `sism-0.5.0-1.x86_64.rpm`
+ - Run `sudo dnf install sism-0.5.0-1.x86_64.rpm`
  - To start the application use `sism` on the commmand line
 
 ### Ubuntu 23.04
- - Download the `sism-0.4.0.zip` release file
+ - Download the `sism-0.5.0.zip` release file
  - Uncompress it
  - Open the terminal on the uncompressed folder
  - Run `sudo ./install.sh`
@@ -63,7 +63,7 @@ but it may require fiddling with libraries if they are older. It is my intention
 
  - Clone this repository
  - Enter the project folder with the terminal
- - Run `tools/release.sh <release-version>` where `release-version` can be `0.4.0` for instance`
+ - Run `tools/release.sh <release-version>` where `release-version` can be `0.5.0` for instance`
  - The build files will be on the `dist` folder
 
 

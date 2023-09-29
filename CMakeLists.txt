@@ -4,7 +4,7 @@ project(Sism)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(VERSION 0.4.0)
+set(VERSION 0.5.0)
 
 find_package(sdbus-c++ REQUIRED)
 find_package(PkgConfig)
