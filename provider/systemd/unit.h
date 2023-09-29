@@ -87,7 +87,7 @@ namespace provider::systemd {
 
         Unit(std::shared_ptr<UnitFile> unit_file): 
             name(unit_file->name),
-            description("(not loaded)"),
+            description(unit_file->name),
             load_state("not-loaded"),
             active_state("inactive"),
             sub_state("inactive"),
