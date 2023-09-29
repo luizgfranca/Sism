@@ -22,6 +22,7 @@
 #include <format>
 #include <iostream>
 #include <memory>
+#include "../../module/logger/logger.h"
 
 using namespace provider::systemd;
 
@@ -29,9 +30,9 @@ SystemdProvider::SystemdProvider() {
     m_dbus_systemd_manager_interface = std::make_unique<dbus::systemd::SystemdManager>();
     m_unit_paths = m_dbus_systemd_manager_interface->get_unit_paths_property();
 
-    std::cout << "loading unit paths\n";
+    module::logger::debug("loading unit paths");
     for(auto i : *m_unit_paths) {
-        std::cout << std::format("{}\n", i);
+        module::logger::debug("{}", i);
     }
 }
 
