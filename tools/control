@@ -1,0 +1,8 @@
+Package: sism
+Version: <<version>>
+Section: utils
+Priority: optional
+Architecture: all
+Depends: libgtk-4-dev, libglibmm-2.68-dev, libcairomm-1.16-dev, libpangomm-2.48-dev, libgtkmm-4.0-dev, libsdbus-c++-dev
+Maintainer: Luiz Gustavo <luizgfc@proton.me>
+Description: Services manager for the linux desktop
