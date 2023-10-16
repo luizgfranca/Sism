@@ -76,21 +76,7 @@ MainWindow::MainWindow(SismApplication *application) {
     m_header_bar.pack_end(m_refresh_button);
     set_titlebar(m_header_bar);
 
-    Gtk::Box service_information_box;
-    service_information_scroller.set_child(service_information_box);
-
-    service_information_box.set_orientation(Gtk::Orientation::VERTICAL);
-    service_information_box.append(*(new component::ServiceProperty("Service details", "")));
-    service_information_box.append(m_serviceproperty_title);
-    service_information_box.append(m_serviceproperty_description);
-    service_information_box.append(m_serviceproperty_loaded);
-    service_information_box.append(m_serviceproperty_state);
-    service_information_box.append(m_serviceproperty_followed);
-    service_information_box.append(m_serviceproperty_object_path);
-    service_information_box.append(*(new component::ServiceProperty("", "")));
-    service_information_box.append(*(new component::ServiceProperty("Job currently processing", "")));
-    service_information_box.append(m_serviceproperty_job_type);
-    service_information_box.append(m_serviceproperty_job_object_path);
+    service_information_scroller.set_child(m_service_details_section);
 }
 
 
@@ -123,22 +109,7 @@ void MainWindow::on_row_selection() {
         m_stop_button.set_visible(true);
     }
 
-    m_serviceproperty_title.set_value(item.name);
-    m_serviceproperty_description.set_value(item.description);
-    m_serviceproperty_loaded.set_value(item.load_state);
-    m_serviceproperty_state.set_value(item.active_state + " / " + item.sub_state);
-    m_serviceproperty_followed.set_value(item.follows);
-    m_serviceproperty_object_path.set_value(item.object_path);
-    
-    if(!item.has_running_job()) {
-        m_serviceproperty_job_type.set_visible(false);
-        m_serviceproperty_job_object_path.set_visible(false);
-    } else {
-        m_serviceproperty_job_type.set_visible(true);
-        m_serviceproperty_job_object_path.set_visible(true);
-        m_serviceproperty_job_type.set_value(item.get_running_job()->name);
-        m_serviceproperty_job_object_path.set_value(item.get_running_job()->path);
-    }
+    m_service_details_section.set_service(item);
 }
 
 std::optional<provider::systemd::Unit> MainWindow::get_service_from_currently_selected_row() {

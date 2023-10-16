@@ -26,7 +26,7 @@
 #include "gtkmm/headerbar.h"
 #include "gtkmm/window.h"
 
-#include "component//service-property/service-property.h"
+#include "component/service-details-section/service-details-section.h"
 #include "../../provider/systemd/unit.h"
 #include "application.h"
 
@@ -70,16 +70,7 @@ namespace application::ui {
         Gtk::Button m_restart_button;
         Gtk::Button m_refresh_button;
 
-        component::ServiceProperty m_serviceproperty_title = component::ServiceProperty("Title:", "example.service");
-        component::ServiceProperty m_serviceproperty_description = component::ServiceProperty("Description:", "Example service description");
-        component::ServiceProperty m_serviceproperty_loaded = component::ServiceProperty("Loaded:", "loaded");
-        component::ServiceProperty m_serviceproperty_state = component::ServiceProperty("State:", "running/start");
-        component::ServiceProperty m_serviceproperty_followed = component::ServiceProperty("Following:", "other.service");
-        component::ServiceProperty m_serviceproperty_object_path = component::ServiceProperty("Object path:", "?");
-        
-        component::ServiceProperty m_serviceproperty_job_type = component::ServiceProperty("Type:", "type");
-        component::ServiceProperty m_serviceproperty_job_object_path = component::ServiceProperty("Object Path:", "type");
-
+        component::ServiceDetailsSection m_service_details_section = component::ServiceDetailsSection();
 
         void add_grid_item(const provider::systemd::Unit& unit);
 

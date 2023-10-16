@@ -17,6 +17,7 @@ link_directories(
     application/ui
     application/ui/component
     application/ui/component/service-property
+    application/ui/component/service-details-section
     graphics
     module
     module/system-services-manager
@@ -43,6 +44,7 @@ include_directories(
     application/ui
     application/ui/component
     application/ui/component/service-property
+    application/ui/component/service-details-section
     application
     )
 
@@ -57,6 +59,7 @@ add_executable(
     module/system-services-manager/system-services-manager.cpp
     application/controller/system-services-controller.cpp
     application/ui/component/service-property/service-property.cpp
+    application/ui/component/service-details-section/service-details-section.cpp
     application/ui/main-window.cpp
     application/application.cpp
     main.cpp
