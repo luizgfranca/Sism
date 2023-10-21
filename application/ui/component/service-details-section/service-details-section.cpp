@@ -14,10 +14,7 @@ void ServiceDetailsSection::setup_components() {
 
     m_property_listbox.append(m_serviceproperty_loaded);
     m_property_listbox.append(m_serviceproperty_state);
-    m_property_listbox.append(m_serviceproperty_followed);
-    m_property_listbox.append(m_serviceproperty_object_path);
-    m_property_listbox.append(m_serviceproperty_job_type);
-    m_property_listbox.append(m_serviceproperty_job_object_path);
+    m_property_listbox.append(m_serviceproperty_definition_file_path);
 }
 
 void ServiceDetailsSection::setup_style() {
@@ -55,16 +52,10 @@ void ServiceDetailsSection::set_service(provider::systemd::Unit service_unit) {
     m_serviceproperty_description.set_text(service_unit.description);
     m_serviceproperty_loaded.set_value(service_unit.load_state);
     m_serviceproperty_state.set_value(service_unit.active_state + " / " + service_unit.sub_state);
-    m_serviceproperty_followed.set_value(service_unit.follows);
-    m_serviceproperty_object_path.set_value(service_unit.object_path);
     
-    if(!service_unit.has_running_job()) {
-        m_serviceproperty_job_type.set_visible(false);
-        m_serviceproperty_job_object_path.set_visible(false);
+    if(service_unit.unit_file != nullptr) {
+        m_serviceproperty_definition_file_path.set_value(service_unit.unit_file->complete_path);
     } else {
-        m_serviceproperty_job_type.set_visible(true);
-        m_serviceproperty_job_object_path.set_visible(true);
-        m_serviceproperty_job_type.set_value(service_unit.get_running_job()->name);
-        m_serviceproperty_job_object_path.set_value(service_unit.get_running_job()->path);
+        m_serviceproperty_definition_file_path.set_value("not found");
     }
 }

@@ -20,11 +20,8 @@ namespace application::ui::component {
         Gtk::ListBox m_property_listbox;
         PropertyValueListRow m_serviceproperty_loaded = PropertyValueListRow("Loaded");
         PropertyValueListRow m_serviceproperty_state = PropertyValueListRow("State");
-        PropertyValueListRow m_serviceproperty_followed = PropertyValueListRow("Followed by");
-        PropertyValueListRow m_serviceproperty_object_path = PropertyValueListRow("Object Path");
-        PropertyValueListRow m_serviceproperty_job_type = PropertyValueListRow("Job Type");
-        PropertyValueListRow m_serviceproperty_job_object_path = PropertyValueListRow("Job Object Path");
-
+        PropertyValueListRow m_serviceproperty_definition_file_path = PropertyValueListRow("Definition file");
+        
         void setup_components();
         void setup_style();
 
