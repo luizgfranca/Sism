@@ -22,6 +22,7 @@ void ServiceDetailsSection::setup_components() {
 
 void ServiceDetailsSection::setup_style() {
     set_orientation(Gtk::Orientation::VERTICAL);
+    add_css_class("frame");
 
     m_serviceproperty_title.set_size_request(-1, 50);
 
