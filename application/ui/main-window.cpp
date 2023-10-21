@@ -47,13 +47,10 @@ MainWindow::MainWindow(SismApplication *application) {
     service_grid_scroller.set_child(m_treeview);
 
     Gtk::ScrolledWindow service_information_scroller;
-    service_information_scroller.set_min_content_width(450);
-
+    
     Gtk::Box container;
-    container.set_halign(Gtk::Align::FILL);
+    container.set_hexpand(false);
     container.append(service_grid_scroller);
-    container.append(service_information_scroller);
-
     set_child(container);
 
     load_grid_data();
@@ -76,7 +73,9 @@ MainWindow::MainWindow(SismApplication *application) {
     m_header_bar.pack_end(m_refresh_button);
     set_titlebar(m_header_bar);
 
-    service_information_scroller.set_child(m_service_details_section);
+    // service_information_scroller.set_child(m_service_details_section);
+    m_service_details_section.set_size_request(500,-1);
+    container.append(m_service_details_section);
 }
 
 

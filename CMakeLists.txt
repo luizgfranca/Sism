@@ -16,8 +16,7 @@ link_directories(
     application/controller
     application/ui
     application/ui/component
-    application/ui/component/service-property
-    application/ui/component/service-details-section
+    application/ui/component/title-header
     graphics
     module
     module/system-services-manager
@@ -43,8 +42,8 @@ include_directories(
     application/controller
     application/ui
     application/ui/component
-    application/ui/component/service-property
     application/ui/component/service-details-section
+    application/ui/component/title-header
     application
     )
 
@@ -58,8 +57,8 @@ add_executable(
     provider/dbus/systemd/systemd-manager.cpp
     module/system-services-manager/system-services-manager.cpp
     application/controller/system-services-controller.cpp
-    application/ui/component/service-property/service-property.cpp
     application/ui/component/service-details-section/service-details-section.cpp
+    application/ui/component/title-header/title-header.cpp
     application/ui/main-window.cpp
     application/application.cpp
     main.cpp
