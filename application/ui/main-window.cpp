@@ -67,10 +67,11 @@ MainWindow::MainWindow(SismApplication *application) {
     m_refresh_button.set_label("Refresh");
     m_refresh_button.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_refresh_service_list_click));
 
+    m_header_bar.pack_start(m_refresh_button);
     m_header_bar.pack_end(m_stop_button);
     m_header_bar.pack_end(m_start_button);
     m_header_bar.pack_end(m_restart_button);
-    m_header_bar.pack_end(m_refresh_button);
+    
     set_titlebar(m_header_bar);
 
     // service_information_scroller.set_child(m_service_details_section);
