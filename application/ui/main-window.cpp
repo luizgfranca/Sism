@@ -27,7 +27,7 @@ using namespace application::ui;
 MainWindow::MainWindow(SismApplication *application) {
     m_application = application;
 
-    set_title("Sism");
+    set_title("Sism (alpha release)");
     set_default_size(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
     m_tree_store_mutex.lock();
