@@ -26,6 +26,7 @@ cp build/sism "$RELEASE_PATH"
 cp tools/dependencies-fedora.sh "$RELEASE_PATH/scripts"
 cp tools/dependencies-ubuntu.sh "$RELEASE_PATH/scripts"
 cp tools/install.sh "$RELEASE_PATH"
+cp "build/sism-$1-1.x86_64.rpm" "dist/"
 
 echo "preparing DEB build"
 mkdir "dist/$DEB_PACKAGE_NAME/bin"
