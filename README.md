@@ -2,7 +2,8 @@
 
 Sism is a tool to manage the services running on the background of your system. This includes for example the Docker runtime, web servers, daemons, system services, and many other things.
 
-[Screencast from 2023-08-20 12-55-39.webm](https://github.com/luizgfranca/SISM/assets/19842670/e4979e4a-96aa-4b24-a829-ea132beae167)
+[Screencast from 2023-10-22 12-08-40.webm](https://github.com/luizgfranca/SISM/assets/19842670/100080eb-e606-4519-8052-b7c7a647b031)
+
 
 This project is currently on the intial steps of development, so it's pretty barebones and doesn't have the best user experience, but I want to make many cool things with it!
 
