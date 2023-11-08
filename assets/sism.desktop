@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Sism
+GenericName=Services Manager
+Comment=Manage your system's services
+TryExec=sism
+Exec=sism
+Terminal=false
+Type=Application
+Icon=sism
+Categories=System;Monitor;
