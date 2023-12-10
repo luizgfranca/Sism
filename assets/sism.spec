@@ -32,13 +32,19 @@ Services manager for GNU/Linux operating systems.
 %install
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/%{_bindir}
+mkdir -p $RPM_BUILD_ROOT/%{_datadir}/applications
+mkdir -p $RPM_BUILD_ROOT/%{_datadir}/icons
 cp %{name} $RPM_BUILD_ROOT/%{_bindir}
+cp %{name}.desktop $RPM_BUILD_ROOT/%{_datadir}/applications
+cp %{name}.svg $RPM_BUILD_ROOT/%{_datadir}/icons
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %{_bindir}/%{name}
+%{_datadir}/applications/%{name}.desktop
+%{_datadir}/icons/%{name}.svg
 
 %changelog
 * Thu Nov 09 2023 luizgfranca <luizgfc@proton.me>

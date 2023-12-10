@@ -30,6 +30,8 @@ cp build/sism "$RELEASE_PATH"
 cp tools/dependencies-fedora.sh "$RELEASE_PATH/scripts"
 cp tools/dependencies-ubuntu.sh "$RELEASE_PATH/scripts"
 cp tools/install.sh "$RELEASE_PATH"
+cp assets/sism.svg "$RELEASE_PATH"
+cp assets/sism.desktop "$RELEASE_PATH"
 
 echo "preparing DEB build"
 rm -rf mkdir "dist/$DEB_PACKAGE_NAME"
@@ -42,6 +44,8 @@ echo "preparing RPM build"
 rm -rf "build/sism-$1"
 mkdir -p "build/sism-$1"
 cp "$RELEASE_PATH/sism" "build/sism-$1/"
+cp assets/sism.desktop "build/sism-$1/"
+cp assets/sism.svg "build/sism-$1/"
 cd build
 tar --create --file "sism-$1.tar.gz" "sism-$1"
 cd ..
