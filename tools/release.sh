@@ -37,7 +37,7 @@ echo "preparing DEB build"
 rm -rf mkdir "dist/$DEB_PACKAGE_NAME"
 mkdir -p "dist/$DEB_PACKAGE_NAME/bin"
 mkdir -p "dist/$DEB_PACKAGE_NAME/DEBIAN"
-cat tools/control | sed "s/<<version>>/$1-1/" > dist/$DEB_PACKAGE_NAME/DEBIAN/control
+cat assets/control | sed "s/<<version>>/$1-1/" > dist/$DEB_PACKAGE_NAME/DEBIAN/control
 cp build/sism "dist/$DEB_PACKAGE_NAME/bin"
 
 echo "preparing RPM build"
