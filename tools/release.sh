@@ -37,8 +37,12 @@ echo "preparing DEB build"
 rm -rf mkdir "dist/$DEB_PACKAGE_NAME"
 mkdir -p "dist/$DEB_PACKAGE_NAME/bin"
 mkdir -p "dist/$DEB_PACKAGE_NAME/DEBIAN"
+mkdir -p "dist/$DEB_PACKAGE_NAME/usr/share/applications"
+mkdir -p "dist/$DEB_PACKAGE_NAME/usr/share/icons"
 cat assets/control | sed "s/<<version>>/$1-1/" > dist/$DEB_PACKAGE_NAME/DEBIAN/control
 cp build/sism "dist/$DEB_PACKAGE_NAME/bin"
+cp assets/sism.desktop "dist/$DEB_PACKAGE_NAME/usr/share/applications"
+cp assets/sism.svg "dist/$DEB_PACKAGE_NAME/usr/share/icons"
 
 echo "preparing RPM build"
 rm -rf "build/sism-$1"
