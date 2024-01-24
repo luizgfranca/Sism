@@ -9,6 +9,7 @@ set(VERSION 0.6.0)
 find_package(sdbus-c++ REQUIRED)
 find_package(PkgConfig)
 pkg_check_modules(GTKMM gtkmm-4.0)
+pkg_check_modules(SYSTEMD systemd)
 
 link_directories(
     ${GTKMM_LIBRARY_DIRS}
@@ -70,6 +71,7 @@ add_executable(
 target_link_libraries(
     sism 
     PRIVATE SDBusCpp::sdbus-c++ 
+    systemd
     ${GTKMM_LIBRARIES}
     )
 

@@ -17,19 +17,60 @@
  */
 
 #include "systemd-manager.h"
+#include <cstdlib>
+#include <iostream>
 #include <sdbus-c++/IProxy.h>
+#include <string>
 #include <vector>
+#include "dto/unit-operation-mode.h"
 #include "properties.h"
 #include "interface-properties.h"
 #include "method-names.h"
 
+#include <systemd/sd-bus.h>
+
+#include <stdio.h>
+
+// from example in reference 
+// https://www.freedesktop.org/software/systemd/man/latest/sd_bus_call_method.html#
+#define _cleanup_(f) __attribute__((cleanup(f)))
+
 using namespace provider::dbus::systemd;
+
+void log_sd_bus_call(
+    const char * method_name,
+    const char * destination,
+    const char * path,
+    const char * interface,
+    const char * member,
+    std::vector<const char *>* params
+) {
+    printf(
+        "%s(\n  %s,\n  %s,\n  %s,\n  %s,\n",
+        method_name,
+        destination,
+        path,
+        interface,
+        member
+    );
+    for(auto param : *params) {
+        printf("    %s,\n", param);
+    }
+    printf(")\n");
+}
 
 SystemdManager::SystemdManager() {
     this->proxy = sdbus::createProxy(
         DESTINATION_NAME, 
         OBJECT_PATH
     );
+
+    auto response = sd_bus_open_system(&m_sd_bus_connection);
+    if(response < 0) {
+        std::cout << "ERROR INSTANTIATING DBUS\n";
+    } else {
+        std::cout << "SUCCESS INSTANTIATING DBUS\n";
+    }
 
     proxy->finishRegistration();
 }
@@ -54,11 +95,35 @@ list_unit_files_response_t SystemdManager::list_unit_files() {
 
 
 void SystemdManager::stop_unit(std::string unit_name, UnitOperationMode mode) {
-    sdbus::ObjectPath result;
-    proxy->callMethod(manager::method::STOP_UNIT_METHOD)
-        .onInterface(manager::INTERFACE_NAME)
-        .withArguments(unit_name, to_string(mode))
-        .storeResultsTo(result);
+    // i don't really know why these things are needed yet, but it is in the reference example
+    // https://www.freedesktop.org/software/systemd/man/latest/sd_bus_call_method.html#
+    _cleanup_(sd_bus_flush_close_unrefp) sd_bus *bus = NULL;
+    _cleanup_(sd_bus_error_free) sd_bus_error error = SD_BUS_ERROR_NULL;
+    _cleanup_(sd_bus_message_unrefp) sd_bus_message *reply = NULL;
+    
+    int result = -1;
+
+    result = sd_bus_call_method(
+        this->m_sd_bus_connection, 
+        DESTINATION_NAME.c_str(), 
+        OBJECT_PATH.c_str(), 
+        manager::INTERFACE_NAME.c_str(), 
+        manager::method::STOP_UNIT_METHOD.c_str(), 
+        &error, 
+        &reply, 
+        "ss",
+        unit_name.c_str(),
+        to_string(mode).c_str()
+    );
+
+    log_sd_bus_call(
+        "sd_bus_call_method", 
+        DESTINATION_NAME.c_str(), 
+        OBJECT_PATH.c_str(), 
+        manager::INTERFACE_NAME.c_str(), 
+        manager::method::STOP_UNIT_METHOD.c_str(), 
+        new std::vector{unit_name.c_str(), to_string(mode).c_str()}
+    );
 }
 
 
