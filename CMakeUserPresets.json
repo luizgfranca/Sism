@@ -1,0 +1,9 @@
+{
+    "version": 4,
+    "vendor": {
+        "conan": {}
+    },
+    "include": [
+        "/home/hoows/source/sism/build/CMakePresets.json"
+    ]
+}
