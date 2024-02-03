@@ -22,7 +22,6 @@
 
 #include <memory>
 #include <sdbus-c++/IProxy.h>
-#include <systemd/sd-bus.h>
 #include "dto/dto.h"
 
 namespace provider::dbus::systemd {
@@ -33,7 +32,6 @@ namespace provider::dbus::systemd {
     */
     class SystemdManager {
         std::unique_ptr<sdbus::IProxy> proxy;
-        sd_bus* m_sd_bus_connection;
     public:
         SystemdManager();
 
