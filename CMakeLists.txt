@@ -70,7 +70,7 @@ add_executable(
 target_link_libraries(
     sism 
     PRIVATE SDBusCpp::sdbus-c++ 
-    ${GTKMM_LIBRARIES}
+    ${GTKMM_LIBRARIES} -static 
     )
 
 include(GNUInstallDirs)

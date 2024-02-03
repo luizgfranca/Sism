@@ -3,3 +3,5 @@ build
 dist
 
 rpmbuild
+assets/.flatpak-builder
+.flatpak-builder
