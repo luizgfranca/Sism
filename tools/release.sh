@@ -6,16 +6,12 @@ if [ "$1" == "" ]; then
 fi
 
 echo "building project"
-cd build
-cmake ..
-make
-make package
-cd ..
+bash tools/compile.sh
 
 RELEASE_PATH="dist/sism-$1"
 
 DEB_PACKAGE_NAME="sism-$1-1_amd64"
-RPM_PACKAGE_NAME="sism-$1-1.fc39.x86_64"
+RPM_PACKAGE_NAME="sism-$1-1.x86_64"
 
 echo "preparing release structure"
 rm -rf "$RELEASE_PATH" 
