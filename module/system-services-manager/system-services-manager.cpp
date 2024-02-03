@@ -18,9 +18,7 @@
 
 
 #include "system-services-manager.h"
-#include "unit.h"
 #include <memory>
-#include <utility>
 
 using namespace module::services;
 
@@ -40,5 +38,5 @@ std::shared_ptr<std::vector<provider::systemd::Unit>> SystemServicesManager::get
     return provider::systemd::Unit::filter_by_type(
         m_systemd_provider.list_all_units(), 
         "service"
-    );
+    ); 
 }
