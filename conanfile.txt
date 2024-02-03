@@ -1,0 +1,6 @@
+[requires]
+sdbus-cpp/1.3.0
+
+[generators]
+CMakeDeps
+CMakeToolchain
