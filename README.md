@@ -2,7 +2,9 @@
 
 Sism is a tool to discover and manage the services running on the background of your system: web servers, daemons, system services, and many other things.
 
-[Screencast from 2023-10-22 12-08-40.webm](https://github.com/luizgfranca/SISM/assets/19842670/100080eb-e606-4519-8052-b7c7a647b031)
+
+
+https://github.com/luizgfranca/Sism/assets/19842670/35c1fb3c-a55d-41e1-ae51-90a55a6365ea
 
 
 This project is currently on the intial steps of development, so it's pretty barebones and doesn't have the best user experience, but I want to make many cool things with it!
