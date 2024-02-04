@@ -29,12 +29,12 @@ Current supported distributions are `Fedora >= 38` and `Ubuntu >= 23.04`.
 
 #### Fedora >= 38
 The project has an RPM package that can be used for the fedora 38 installation:
- - Download the `sism-0.6.0-1.x86_64.rpm` release file
+ - Download the `sism-0.7.0-1.x86_64.rpm` release file
  - On the download folder run `sudo dnf install sism-0.7.0-1.x86_64.rpm`
  - Search for the application in your main menu
 
 #### Ubuntu >= 23.04
- - Download the `sism-0.6.0-1_amd64.deb` release file
+ - Download the `sism-0.7.0-1_amd64.deb` release file
  - On the download folder run `sudo apt install sism-0.7.0-1_amd64.deb`
  - Search for the application in your main menu
 
