@@ -22,7 +22,7 @@
 #include <string>
 #include <vector>
 #include "../dbus/systemd/dto/dto.h"
-
+#include "./enablement-status.h"
 
 namespace provider::systemd {
     class UnitFile {
@@ -30,7 +30,8 @@ namespace provider::systemd {
         std::string name;
         std::string containing_folder;
         std::string complete_path;
-        std::string enabled_status;
+        std::string enabled_status_string;
+        EnablementStatus enablement_status;
 
         UnitFile(
             std::string name,
@@ -41,7 +42,9 @@ namespace provider::systemd {
             name(name),
             containing_folder(containing_folder),
             complete_path(complete_path),
-            enabled_status(enablement_status) {}
+            enabled_status_string(enablement_status) {
+                this->enablement_status = from_string<EnablementStatus>(enabled_status_string);
+            }
 
         static UnitFile from_list_unit_file_response_item(dbus::systemd::list_unit_files_response_unit_file_t& unit_file);
         static std::vector<UnitFile> from_list_unit_file_response(dbus::systemd::list_unit_files_response_t& response);

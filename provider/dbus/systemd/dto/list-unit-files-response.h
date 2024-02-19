@@ -24,7 +24,7 @@ namespace provider::dbus::systemd {
 
     typedef sdbus::Struct<
         std::string, // unit file path
-        std::string // is the unit file enables
+        std::string // is the unit file enabled
     > list_unit_files_response_unit_file_t;
 
     typedef std::vector<list_unit_files_response_unit_file_t> list_unit_files_response_t;
