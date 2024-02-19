@@ -22,8 +22,8 @@
 #include <cstdint>
 #include <memory>
 #include <vector>
-#include "../module/string-tools/to-uppercase.h"
-#include "../module/logger/logger.h"
+#include "../../module/logger/logger.h"
+#include "../../module/string-tools/to-uppercase.h"
 
 using namespace provider::systemd;
 
@@ -90,6 +90,10 @@ std::shared_ptr<std::vector<Unit>> Unit::from_dbus_list_units_and_list_files_res
     auto unit_files = std::make_shared<std::vector<UnitFile>>(
         UnitFile::from_list_unit_file_response(list_unit_files_response)
     );
+
+    for(auto file : *unit_files) {
+        module::logger::debug("unit_file: {} -> {}", file.complete_path, file.enabled_status_string);
+    }
 
     Unit::sort_by_name_inplace(raw_units);
     UnitFile::sort_by_name_inplace(unit_files);
