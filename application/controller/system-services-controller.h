@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "../module/system-services-manager/system-services-manager.h"
+#include "../../module/system-services-manager/system-services-manager.h"
 
 namespace application::controller {
     class SystemServicesController {

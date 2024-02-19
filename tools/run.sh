@@ -12,6 +12,12 @@ rm -rf build
 
 conan install . --output-folder=build --profile=debug --build missing
 cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Debug
+cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=on
 cmake --build .
+cd ..
+
+mkdir -p .vscode
+cp build/compile_commands.json .vscode/compile_commands.json
+
+cd build
 ./sism

@@ -5,3 +5,9 @@ dist
 rpmbuild
 
 **/.flatpak-builder
+
+logs.txt
+
+CMakeUserPresets.json
+
+.vscode
