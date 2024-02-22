@@ -14,6 +14,7 @@ void PropertyValueListRow<std::string, Gtk::Label>::update_content() {
 template <>
 void PropertyValueListRow<bool, Gtk::Switch>::update_content() {
     m_property_label.set_text(m_property);
+    m_value_widget.set_active(m_value);
     m_value_widget.set_state(m_value);
 }
 
