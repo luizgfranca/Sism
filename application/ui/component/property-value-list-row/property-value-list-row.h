@@ -2,6 +2,8 @@
 #include "gtkmm/label.h"
 #include <gtkmm.h>
 #include <string>
+#include "../../../../module/logger/logger.h"
+
 
 namespace application::ui::component {
 
@@ -14,10 +16,14 @@ namespace application::ui::component {
         Gtk::Label m_property_label;
         UIComponentType m_value_widget;
 
-        inline void setup_components() {
+        void setup_value_widget_signal_handlers() {}
+
+        void setup_components() {
             set_child(m_content_box);
             m_content_box.append(m_property_label);
             m_content_box.append(m_value_widget);
+
+            setup_value_widget_signal_handlers();
         }
 
         void setup_style() {
@@ -35,7 +41,15 @@ namespace application::ui::component {
         void update_content() {
             m_property_label.set_text(m_property);
         }
+
+        ValueType on_value_widget_interaction(ValueType new_input_value) {
+            module::logger::debug("value_widget_interaction new_input_value={}", new_input_value);
+            set_value(new_input_value);
+            return new_input_value;
+        }
     public:
+        std::function<void(ValueType old_value,ValueType mew_value)> on_interaction;
+
         PropertyValueListRow(std::string initial_property_name, ValueType initial_value) {
             m_property = initial_property_name;
             m_value = initial_value;
