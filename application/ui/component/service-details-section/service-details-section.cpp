@@ -15,6 +15,7 @@ void ServiceDetailsSection::setup_components() {
     m_property_listbox.append(m_serviceproperty_loaded);
     m_property_listbox.append(m_serviceproperty_state);
     m_property_listbox.append(m_serviceproperty_definition_file_path);
+    m_property_listbox.append(m_test_row);
 }
 
 void ServiceDetailsSection::setup_style() {

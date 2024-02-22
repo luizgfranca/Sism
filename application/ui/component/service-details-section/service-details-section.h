@@ -4,6 +4,7 @@
 #include "gtkmm/frame.h"
 #include "gtkmm/label.h"
 #include "gtkmm/listbox.h"
+#include "gtkmm/switch.h"
 #include "gtkmm/window.h"
 #include "../title-header/title-header.h"
 
@@ -21,6 +22,7 @@ namespace application::ui::component {
         PropertyValueListRow<std::string, Gtk::Label> m_serviceproperty_loaded{"Loaded", ""};
         PropertyValueListRow<std::string, Gtk::Label> m_serviceproperty_state{"State", ""};
         PropertyValueListRow<std::string, Gtk::Label> m_serviceproperty_definition_file_path{"Definition file", ""};
+        PropertyValueListRow<bool, Gtk::Switch> m_test_row{"Switch prop test", true};
         
         void setup_components();
         void setup_style();
