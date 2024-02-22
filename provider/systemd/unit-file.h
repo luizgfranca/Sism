@@ -25,6 +25,13 @@
 
 namespace provider::systemd {
     class UnitFile {
+    private:
+        std::vector<EnablementStatus> m_enabling_applicable_enablement_statuses{
+            EnablementStatus::DISABLED,
+            EnablementStatus::ENABLED,
+            EnablementStatus::ENABLED_RUNTIME,
+            EnablementStatus::ENABLED
+        };
     public:
         std::string name;
         std::string containing_folder;
@@ -48,5 +55,7 @@ namespace provider::systemd {
         static UnitFile from_list_unit_file_response_item(dbus::systemd::list_unit_files_response_unit_file_t& unit_file);
         static std::vector<UnitFile> from_list_unit_file_response(dbus::systemd::list_unit_files_response_t& response);
         static void sort_by_name_inplace(std::shared_ptr<std::vector<UnitFile>> unit_files);
+
+        bool is_enablement_applicable();
     };
 }

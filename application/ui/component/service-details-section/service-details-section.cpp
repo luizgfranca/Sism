@@ -8,14 +8,19 @@ using namespace application::ui::component;
 void ServiceDetailsSection::setup_components() {
     append(m_serviceproperty_title);
     append(m_serviceproperty_description);
-
+    
     m_property_list_frame.set_child(m_property_listbox);
     append(m_property_list_frame);
-
     m_property_listbox.append(m_serviceproperty_loaded);
     m_property_listbox.append(m_serviceproperty_state);
     m_property_listbox.append(m_serviceproperty_definition_file_path);
-    m_property_listbox.append(m_test_row);
+    
+    m_settings_subsection_title.set_label("Settings");
+    append(m_settings_subsection_title);
+
+    m_settings_list_frame.set_child(m_settings_listbox);
+    append(m_settings_list_frame);
+    m_settings_listbox.append(m_setting_auto_start_on_system_startup);
 }
 
 void ServiceDetailsSection::setup_style() {
@@ -32,11 +37,24 @@ void ServiceDetailsSection::setup_style() {
     m_serviceproperty_description.set_margin_top(15);
     m_serviceproperty_description.set_margin_bottom(15);
 
+    m_settings_subsection_title.set_max_width_chars(5);
+    m_settings_subsection_title.set_wrap(true);
+    m_settings_subsection_title.add_css_class("heading");
+    m_settings_subsection_title.set_hexpand(false);
+    m_settings_subsection_title.set_margin(10);
+    m_settings_subsection_title.set_margin_top(20);
+    m_settings_subsection_title.set_margin_bottom(10);
+
     m_property_listbox.add_css_class("rich-list");
     m_property_listbox.add_css_class("separators");
     m_property_listbox.set_selection_mode(Gtk::SelectionMode::NONE);
 
+    m_settings_listbox.add_css_class("rich-list");
+    m_settings_listbox.add_css_class("separators");
+    m_settings_listbox.set_selection_mode(Gtk::SelectionMode::NONE);
+
     m_property_list_frame.set_margin(10);
+    m_settings_list_frame.set_margin(10);
 }
 
 void ServiceDetailsSection::configure() {
@@ -58,5 +76,17 @@ void ServiceDetailsSection::set_service(provider::systemd::Unit service_unit) {
         m_serviceproperty_definition_file_path.set_value(service_unit.unit_file->complete_path);
     } else {
         m_serviceproperty_definition_file_path.set_value("not found");
+    }
+
+    if(service_unit.unit_file == nullptr || !service_unit.unit_file->is_enablement_applicable()) {
+        m_settings_list_frame.set_visible(false);
+        m_settings_subsection_title.set_visible(false);
+    } else {
+        m_settings_list_frame.set_visible(true);
+        m_settings_subsection_title.set_visible(true);
+        
+        m_setting_auto_start_on_system_startup.set_value(
+            service_unit.unit_file->enablement_status == provider::systemd::EnablementStatus::ENABLED
+        );
     }
 }

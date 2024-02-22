@@ -18,6 +18,7 @@
 
 
 #include "unit-file.h"
+#include <algorithm>
 #include <filesystem>
 #include "../module/string-tools/to-uppercase.h"
 
@@ -56,4 +57,11 @@ void UnitFile::sort_by_name_inplace(std::shared_ptr<std::vector<UnitFile>> unit_
             return string_tools::to_uppercase(b.name) > string_tools::to_uppercase(a.name);
         }
     );
+}
+
+bool UnitFile::is_enablement_applicable() {
+    return std::count(
+        m_enabling_applicable_enablement_statuses.begin(), 
+        m_enabling_applicable_enablement_statuses.end(), 
+        enablement_status) > 0;
 }

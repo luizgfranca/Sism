@@ -22,7 +22,11 @@ namespace application::ui::component {
         PropertyValueListRow<std::string, Gtk::Label> m_serviceproperty_loaded{"Loaded", ""};
         PropertyValueListRow<std::string, Gtk::Label> m_serviceproperty_state{"State", ""};
         PropertyValueListRow<std::string, Gtk::Label> m_serviceproperty_definition_file_path{"Definition file", ""};
-        PropertyValueListRow<bool, Gtk::Switch> m_test_row{"Switch prop test", true};
+        
+        Gtk::Label m_settings_subsection_title;
+        Gtk::Frame m_settings_list_frame;
+        Gtk::ListBox m_settings_listbox;
+        PropertyValueListRow<bool, Gtk::Switch> m_setting_auto_start_on_system_startup{"Auto start on system startup", true};
         
         void setup_components();
         void setup_style();
