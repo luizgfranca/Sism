@@ -47,3 +47,7 @@ std::shared_ptr<std::vector<provider::systemd::Unit>> SystemServicesController::
 
     return m_services;
 }
+
+bool SystemServicesController::auto_start(const provider::systemd::Unit& service) {
+    return m_manager.set_service_autostart(service);
+}

@@ -1,6 +1,6 @@
 /*
  *   SISM - Services manager for GNU/Linux based operating systems
- *   Copyright (C) 2023 Luiz Gustavo <luizgfc@proton.me>
+ *   Copyright (C) 2024 Luiz Gustavo <luizgfc@proton.me>
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU Affero General Public License as
@@ -16,8 +16,22 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#pragma once
 
-#include "list-units-response.h"
-#include "unit-operation-mode.h"
-#include "list-unit-files-response.h"
-#include "enable-unit-files.response.h"
+#include <sdbus-c++/Types.h>
+#include <vector>
+
+namespace provider::dbus::systemd {
+
+    typedef sdbus::Struct<
+        std::string, 
+        std::string, 
+        std::string
+    > enable_unit_files_response_changes_t;
+
+    typedef struct enable_unit_files_response {
+        bool carries_install_info;
+        std::vector<enable_unit_files_response_changes_t> changes;
+    } enable_unit_files_response_t;
+
+}

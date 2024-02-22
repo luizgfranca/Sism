@@ -17,7 +17,11 @@
  */
 
 #include "systemd-manager.h"
+#include <algorithm>
+#include <memory>
 #include <sdbus-c++/IProxy.h>
+#include <sdbus-c++/IConnection.h>
+#include <sdbus-c++/sdbus-c++.h>
 #include <vector>
 #include "properties.h"
 #include "interface-properties.h"
@@ -26,7 +30,10 @@
 using namespace provider::dbus::systemd;
 
 SystemdManager::SystemdManager() {
+    auto connection = sdbus::createSystemBusConnection();
+    
     this->proxy = sdbus::createProxy(
+        std::move(connection),
         DESTINATION_NAME, 
         OBJECT_PATH
     );
@@ -84,4 +91,22 @@ std::shared_ptr<std::vector<std::string>> SystemdManager::get_unit_paths_propert
             .onInterface(manager::INTERFACE_NAME)
             .get<std::vector<std::string>>()
     );
+}
+
+std::shared_ptr<enable_unit_files_response_t> SystemdManager::enable_unit_files(
+    std::vector<std::string>& unit_files, 
+    bool runtime, 
+    bool force
+) {
+    auto enable_unit_files_response = std::make_shared<enable_unit_files_response_t>();
+    
+    proxy->callMethod(manager::method::ENABLE_UNIT_FILES)
+        .onInterface(manager::INTERFACE_NAME)
+        .withArguments(unit_files, runtime, force)
+        .storeResultsTo(
+            enable_unit_files_response->carries_install_info, 
+            enable_unit_files_response->changes
+        );
+
+    return enable_unit_files_response;
 }

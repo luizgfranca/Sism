@@ -2,6 +2,7 @@
 #include "gtkmm/builder.h"
 #include "gtkmm/enums.h"
 #include "gtkmm/frame.h"
+#include <cassert>
 
 using namespace application::ui::component;
 
@@ -23,9 +24,15 @@ void ServiceDetailsSection::setup_components() {
     m_settings_listbox.append(m_setting_auto_start_on_system_startup);
 }
 
-void ServiceDetailsSection::setup_handlers() {
-    m_setting_auto_start_on_system_startup.on_interaction = [](bool old_value, bool new_value) {
+void ServiceDetailsSection::set_on_enable_unit_request(std::function<bool(void)> handler) {
+    m_on_enable_unit_request = handler;
+
+    m_setting_auto_start_on_system_startup.on_interaction = [this](bool old_value, bool new_value) {
         module::logger::debug("on service_details_section_handler {},{}", old_value, new_value);
+        if(new_value) {
+            return this->m_on_enable_unit_request();
+        }
+
         return new_value;
     };
 }
@@ -66,7 +73,6 @@ void ServiceDetailsSection::setup_style() {
 
 void ServiceDetailsSection::configure() {
     setup_components();
-    setup_handlers();
     setup_style();
 }
 
@@ -74,7 +80,7 @@ ServiceDetailsSection::ServiceDetailsSection() {
     configure();
 }
 
-void ServiceDetailsSection::set_service(provider::systemd::Unit service_unit) {
+void ServiceDetailsSection::set_service(provider::systemd::Unit& service_unit) {
     m_serviceproperty_title.set_title(service_unit.name);
     m_serviceproperty_description.set_text(service_unit.description);
     m_serviceproperty_loaded.set_value(service_unit.load_state);

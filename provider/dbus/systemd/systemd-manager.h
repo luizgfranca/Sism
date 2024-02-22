@@ -49,5 +49,6 @@ namespace provider::dbus::systemd {
         void stop_unit(std::string unit_name, UnitOperationMode mode);
         void start_unit(std::string unit_name, UnitOperationMode mode);
         void reload_or_restart_unit(std::string unit_name, UnitOperationMode mode);
+        std::shared_ptr<enable_unit_files_response_t> enable_unit_files(std::vector<std::string>& unit_files, bool runtime, bool force);
     };
 }

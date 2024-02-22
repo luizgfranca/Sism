@@ -71,3 +71,23 @@ std::shared_ptr<std::vector<Unit>> SystemdProvider::list_all_units() {
         list_unit_files_response
     );
 }
+
+bool SystemdProvider::enable_unit(const Unit& unit) {
+    if(unit.unit_file == nullptr) {
+        return false;
+    }
+
+    std::vector<std::string> unit_file_name{unit.unit_file->complete_path};
+    auto response = m_dbus_systemd_manager_interface->enable_unit_files(
+        unit_file_name, 
+        false, 
+        false
+    );
+
+    module::logger::debug("enable unit result:");
+    for(auto change : response->changes) {
+        module::logger::debug("  changes=({}, {}, {})", change.get<0>(), change.get<1>(), change.get<2>());
+    }
+
+    return true;
+}

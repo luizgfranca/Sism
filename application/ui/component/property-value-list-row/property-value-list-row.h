@@ -44,7 +44,7 @@ namespace application::ui::component {
 
         ValueType on_value_widget_interaction(ValueType new_input_value) {
             module::logger::debug("PropertyValueListRow::value_widget_interaction(old_value={},new_value={})", m_value, new_input_value);
-            if(this->on_interaction != nullptr) {
+            if(this->on_interaction != nullptr && new_input_value != m_value) {
                 auto final_value = this->on_interaction(m_value, new_input_value);
                 set_value(final_value);
                 return final_value;
@@ -54,7 +54,7 @@ namespace application::ui::component {
             return new_input_value;
         }
     public:
-        std::function<ValueType(ValueType old_value,ValueType mew_value)> on_interaction;
+        std::function<ValueType(ValueType old_value, ValueType mew_value)> on_interaction;
 
         PropertyValueListRow(std::string initial_property_name, ValueType initial_value) {
             m_property = initial_property_name;

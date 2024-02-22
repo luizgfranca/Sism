@@ -34,5 +34,6 @@ namespace application::controller {
         void start(const provider::systemd::Unit& service);
         void stop(const provider::systemd::Unit& service);
         void restart(const provider::systemd::Unit& service);
+        bool auto_start(const provider::systemd::Unit& service);
     };
 }

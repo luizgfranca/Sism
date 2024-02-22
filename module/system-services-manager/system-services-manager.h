@@ -32,6 +32,7 @@ namespace module::services {
         void start_service(const provider::systemd::Unit& service);
         void stop_service(const provider::systemd::Unit& service);
         void restart_service(const provider::systemd::Unit& service);
+        bool set_service_autostart(const provider::systemd::Unit& service);
     };
 
 }

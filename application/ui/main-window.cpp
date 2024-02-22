@@ -76,6 +76,11 @@ MainWindow::MainWindow(SismApplication *application) {
 
     // service_information_scroller.set_child(m_service_details_section);
     m_service_details_section.set_size_request(500,-1);
+
+    m_service_details_section.set_on_enable_unit_request([this]() {
+        return this->on_enable_service_autostart();
+    });
+
     container.append(m_service_details_section);
 }
 
@@ -188,4 +193,13 @@ void MainWindow::on_refresh_service_list_click() {
 
 void MainWindow::notify_data_refresh() {
     m_update_data_notification_dispatcher.emit();
+}
+
+bool MainWindow::on_enable_service_autostart() {
+    auto maybe_service = get_service_from_currently_selected_row();
+    if(!maybe_service.has_value()) return false;
+
+    module::logger::debug("on_enable_sertvice_autostart({})", maybe_service.value().name);
+
+    return m_application->system_services_controller().auto_start(maybe_service.value());
 }

@@ -89,6 +89,7 @@ namespace application::ui {
         void on_stop_service_click();
         void on_restart_service_click();
         void on_refresh_service_list_click();
+        bool on_enable_service_autostart();
     };
 
 }
