@@ -18,9 +18,9 @@ namespace application::ui::component {
 
         Gtk::Frame m_property_list_frame;
         Gtk::ListBox m_property_listbox;
-        PropertyValueListRow m_serviceproperty_loaded = PropertyValueListRow("Loaded");
-        PropertyValueListRow m_serviceproperty_state = PropertyValueListRow("State");
-        PropertyValueListRow m_serviceproperty_definition_file_path = PropertyValueListRow("Definition file");
+        PropertyValueListRow<std::string, Gtk::Label> m_serviceproperty_loaded{"Loaded", ""};
+        PropertyValueListRow<std::string, Gtk::Label> m_serviceproperty_state{"State", ""};
+        PropertyValueListRow<std::string, Gtk::Label> m_serviceproperty_definition_file_path{"Definition file", ""};
         
         void setup_components();
         void setup_style();
