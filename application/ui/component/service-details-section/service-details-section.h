@@ -29,6 +29,7 @@ namespace application::ui::component {
         PropertyValueListRow<bool, Gtk::Switch> m_setting_auto_start_on_system_startup{"Auto start on system startup", true};
         
         void setup_components();
+        void setup_handlers();
         void setup_style();
 
         void configure();    

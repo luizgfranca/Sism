@@ -23,6 +23,13 @@ void ServiceDetailsSection::setup_components() {
     m_settings_listbox.append(m_setting_auto_start_on_system_startup);
 }
 
+void ServiceDetailsSection::setup_handlers() {
+    m_setting_auto_start_on_system_startup.on_interaction = [](bool old_value, bool new_value) {
+        module::logger::debug("on service_details_section_handler {},{}", old_value, new_value);
+        return new_value;
+    };
+}
+
 void ServiceDetailsSection::setup_style() {
     set_orientation(Gtk::Orientation::VERTICAL);
     add_css_class("frame");
@@ -59,6 +66,7 @@ void ServiceDetailsSection::setup_style() {
 
 void ServiceDetailsSection::configure() {
     setup_components();
+    setup_handlers();
     setup_style();
 }
 
