@@ -56,16 +56,40 @@ MainWindow::MainWindow(SismApplication *application) {
     load_grid_data();
 
     m_stop_button.set_label("Stop");
-    m_stop_button.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_stop_service_click));
+    m_stop_button.signal_clicked()
+        .connect(
+            sigc::mem_fun(
+                *this, 
+                &MainWindow::on_stop_service_click
+            )
+        );
 
     m_start_button.set_label("Start");
-    m_start_button.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_start_service_click));
+    m_start_button.signal_clicked()
+        .connect(
+            sigc::mem_fun(
+                *this, 
+                &MainWindow::on_start_service_click
+            )
+        );
 
     m_restart_button.set_label("Restart");
-    m_restart_button.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_restart_service_click));
+    m_restart_button.signal_clicked()
+        .connect(
+            sigc::mem_fun(
+                *this, 
+                &MainWindow::on_restart_service_click
+            )
+        );
 
     m_refresh_button.set_label("Refresh");
-    m_refresh_button.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_refresh_service_list_click));
+    m_refresh_button.signal_clicked()
+        .connect(
+            sigc::mem_fun(
+                *this, 
+                &MainWindow::on_refresh_service_list_click
+            )
+        );
 
     m_header_bar.pack_start(m_refresh_button);
     m_header_bar.pack_end(m_stop_button);
@@ -79,6 +103,10 @@ MainWindow::MainWindow(SismApplication *application) {
 
     m_service_details_section.set_on_enable_unit_request([this]() {
         return this->on_enable_service_autostart();
+    });
+
+    m_service_details_section.set_on_disable_unit_request([this]() {
+        return this->on_disable_service_autostart();
     });
 
     container.append(m_service_details_section);
@@ -201,5 +229,16 @@ bool MainWindow::on_enable_service_autostart() {
 
     module::logger::debug("on_enable_sertvice_autostart({})", maybe_service.value().name);
 
-    return m_application->system_services_controller().auto_start(maybe_service.value());
+    return m_application->system_services_controller()
+        .do_auto_start_service(maybe_service.value());
+}
+
+bool MainWindow::on_disable_service_autostart() {
+    auto maybe_service = get_service_from_currently_selected_row();
+    if(!maybe_service.has_value()) return false;
+
+    module::logger::debug("on_disable_sertvice_autostart({})", maybe_service.value().name);
+
+    return m_application->system_services_controller()
+        .do_not_auto_start_service(maybe_service.value());
 }

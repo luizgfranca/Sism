@@ -30,7 +30,10 @@ namespace application::ui::component {
         PropertyValueListRow<bool, Gtk::Switch> m_setting_auto_start_on_system_startup{"Auto start on system startup", true};
 
         std::function<bool(void)> m_on_enable_unit_request;
-        
+        std::function<bool(void)> m_on_disable_unit_request;
+
+        void setup_enable_setting_handlers();
+
         void setup_components();
         void setup_style();
 
@@ -40,6 +43,6 @@ namespace application::ui::component {
         ServiceDetailsSection();
         void set_service(provider::systemd::Unit& service_unit);
         void set_on_enable_unit_request(std::function<bool(void)> handler);
-
+        void set_on_disable_unit_request(std::function<bool(void)> handler);
     };
 }

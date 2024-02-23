@@ -110,3 +110,17 @@ std::shared_ptr<enable_unit_files_response_t> SystemdManager::enable_unit_files(
 
     return enable_unit_files_response;
 }
+
+std::shared_ptr<std::vector<enable_unit_files_response_changes_t>> SystemdManager::disable_unit_files(
+    std::vector<std::string>& unit_files, 
+    bool runtime
+) {
+    auto enable_unit_files_response = std::make_shared<std::vector<enable_unit_files_response_changes_t>>();
+    
+    proxy->callMethod(manager::method::DISABLE_UNIT_FILES)
+        .onInterface(manager::INTERFACE_NAME)
+        .withArguments(unit_files, runtime)
+        .storeResultsTo(*enable_unit_files_response);
+
+    return enable_unit_files_response;
+}

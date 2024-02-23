@@ -23,18 +23,29 @@ void ServiceDetailsSection::setup_components() {
     append(m_settings_list_frame);
     m_settings_listbox.append(m_setting_auto_start_on_system_startup);
 }
+void ServiceDetailsSection::setup_enable_setting_handlers() {
+    m_setting_auto_start_on_system_startup.on_interaction = [this](bool old_value, bool new_value) {
+        module::logger::debug("on service_details_section_handler {},{}", old_value, new_value);
+        if(new_value && this->m_on_enable_unit_request) {
+            module::logger::debug("if(new_value && this->m_on_enable_unit_request) ");
+            return this->m_on_enable_unit_request();
+        } else if(!new_value && this->m_on_disable_unit_request) {
+            module::logger::debug(" else if(!new_value && this->m_on_disable_unit_request)");
+            return this->m_on_disable_unit_request();
+        }
+
+        return old_value;
+    };
+}
 
 void ServiceDetailsSection::set_on_enable_unit_request(std::function<bool(void)> handler) {
     m_on_enable_unit_request = handler;
+    setup_enable_setting_handlers();
+}
 
-    m_setting_auto_start_on_system_startup.on_interaction = [this](bool old_value, bool new_value) {
-        module::logger::debug("on service_details_section_handler {},{}", old_value, new_value);
-        if(new_value) {
-            return this->m_on_enable_unit_request();
-        }
-
-        return new_value;
-    };
+void ServiceDetailsSection::set_on_disable_unit_request(std::function<bool(void)> handler) {
+    m_on_disable_unit_request = handler;
+    setup_enable_setting_handlers();
 }
 
 void ServiceDetailsSection::setup_style() {

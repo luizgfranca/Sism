@@ -39,6 +39,7 @@ namespace provider::systemd {
         void stop_unit(const Unit& unit);
         void reload_or_restart_unit(const Unit& unit);
         bool enable_unit(const Unit& unit);
+        bool disable_unit(const Unit& unit);
     };
 }
 

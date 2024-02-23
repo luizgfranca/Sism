@@ -41,6 +41,9 @@ std::shared_ptr<std::vector<provider::systemd::Unit>> SystemServicesManager::get
     ); 
 }
 
-bool SystemServicesManager::set_service_autostart(const provider::systemd::Unit& service) {
-    return m_systemd_provider.enable_unit(service);
+// returns new service autostart setting value
+bool SystemServicesManager::set_service_autostart(const provider::systemd::Unit& service, bool should_autostart) {
+    return should_autostart 
+        ? m_systemd_provider.enable_unit(service) 
+        : !m_systemd_provider.disable_unit(service);
 }

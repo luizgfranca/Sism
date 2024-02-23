@@ -20,7 +20,6 @@
 #include "systemd-provider.h"
 #include "unit.h"
 #include <format>
-#include <iostream>
 #include <memory>
 #include "../../module/logger/logger.h"
 
@@ -89,5 +88,24 @@ bool SystemdProvider::enable_unit(const Unit& unit) {
         module::logger::debug("  changes=({}, {}, {})", change.get<0>(), change.get<1>(), change.get<2>());
     }
 
-    return true;
+    return response->changes.size() > 0;
+}
+
+bool SystemdProvider::disable_unit(const Unit& unit) {
+    if(unit.unit_file == nullptr) {
+        return false;
+    }
+
+    std::vector<std::string> unit_file_name{unit.unit_file->name};
+    auto response = m_dbus_systemd_manager_interface->disable_unit_files(
+        unit_file_name, 
+        false
+    );
+
+    module::logger::debug("enable unit result:");
+    for(auto change : *response) {
+        module::logger::debug("  changes=({}, {}, {})", change.get<0>(), change.get<1>(), change.get<2>());
+    }
+
+    return response->size() > 0;
 }

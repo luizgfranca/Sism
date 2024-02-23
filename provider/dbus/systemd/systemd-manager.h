@@ -21,8 +21,9 @@
 #pragma once
 
 #include <memory>
-#include <sdbus-c++/IProxy.h>
+#include <sdbus-c++/sdbus-c++.h>
 #include "dto/dto.h"
+#include "enable-unit-files.response.h"
 
 namespace provider::dbus::systemd {
 
@@ -50,5 +51,6 @@ namespace provider::dbus::systemd {
         void start_unit(std::string unit_name, UnitOperationMode mode);
         void reload_or_restart_unit(std::string unit_name, UnitOperationMode mode);
         std::shared_ptr<enable_unit_files_response_t> enable_unit_files(std::vector<std::string>& unit_files, bool runtime, bool force);
+        std::shared_ptr<std::vector<enable_unit_files_response_changes_t>> disable_unit_files(std::vector<std::string>& unit_files, bool runtime);
     };
 }
