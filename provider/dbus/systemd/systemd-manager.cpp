@@ -26,14 +26,15 @@
 #include "properties.h"
 #include "interface-properties.h"
 #include "method-names.h"
+#include "../connection.h"
 
 using namespace provider::dbus::systemd;
 
 SystemdManager::SystemdManager() {
-    auto connection = sdbus::createSystemBusConnection();
+    sdbus::IConnection& connection = DBusConnection::instance().get_system_bus_connection();
     
     this->proxy = sdbus::createProxy(
-        std::move(connection),
+        connection,
         DESTINATION_NAME, 
         OBJECT_PATH
     );
