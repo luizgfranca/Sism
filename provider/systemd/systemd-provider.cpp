@@ -105,7 +105,10 @@ bool SystemdProvider::disable_unit(const Unit& unit) {
         return false;
     }
 
-    auto result = m_polkit_authority_interface->checkAuthorization("org.freedesktop.systemd1.manage-unit-files");
+    auto result = m_polkit_authority_interface->checkAuthorization(
+        "org.freedesktop.systemd1.manage-unit-files"
+    );
+    
     module::logger::debug("check_authorization(authorized={} challenge={})", result.get<0>(), result.get<1>());
 
     if(!result.get<0>()) {

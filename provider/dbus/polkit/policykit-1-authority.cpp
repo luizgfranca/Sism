@@ -41,9 +41,12 @@ PolicyKit1Authority::PolicyKit1Authority() {
     proxy->finishRegistration();
 }
 
-authority::polkit_authorization_result_t PolicyKit1Authority::checkAuthorization(std::string action_id) {
-    authority::polkit_subject_value_t bus_name_value;
-    std::map<std::string, std::string> details;
+authority::polkit_authorization_result_t PolicyKit1Authority::checkAuthorization(
+    std::string action_id,
+    std::map<std::string, std::string> details,
+    CheckAuthorizationFlags flags
+) {
+    authority::polkit_subject_value_t bus_name_value    ;
 
     bus_name_value["name"] = DBusConnection::instance()
         .get_system_bus_connection()
@@ -52,14 +55,13 @@ authority::polkit_authorization_result_t PolicyKit1Authority::checkAuthorization
     authority::polkit_subject_t subject = {"system-bus-name", bus_name_value};
 
     authority::polkit_authorization_result_t result;
-
     proxy->callMethod(authority::method::CHECK_AUTHORIZATION)
         .onInterface(authority::INTERFACE_NAME)
         .withArguments(
             subject, 
             action_id, 
             details,
-            (u_int32_t) 1,
+            (u_int32_t) flags,
             ""
         )
         .storeResultsTo(result);

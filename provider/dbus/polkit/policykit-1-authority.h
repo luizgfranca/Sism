@@ -22,6 +22,7 @@
 #include <sdbus-c++/sdbus-c++.h>
 #include <string>
 #include "dto/check-authorization-result.h"
+#include "dto/check-authorization-flags.h"
 
 namespace provider::dbus::polkit {
 
@@ -29,6 +30,10 @@ namespace provider::dbus::polkit {
         std::unique_ptr<sdbus::IProxy> proxy;
     public:
         PolicyKit1Authority();
-        authority::polkit_authorization_result_t checkAuthorization(std::string action_id);
+        authority::polkit_authorization_result_t checkAuthorization(
+            std::string action_id,
+            std::map<std::string, std::string> details = {},
+    CheckAuthorizationFlags flags = CheckAuthorizationFlags::ALLOW_USER_INTERACTION
+        );
     };
 }
