@@ -31,6 +31,7 @@ link_directories(
     provider/dbus/polkit
     provider/dbus/polkit/dto
     provider/systemd
+    provider/polkit
     tools
     )
 
@@ -43,6 +44,7 @@ include_directories(
     provider/dbus/polkit
     provider/dbus/polkit/dto
     provider/systemd
+    provider/polkit
     module/system-services-manager
     module/logger
     application/controller
@@ -61,6 +63,7 @@ add_executable(
     provider/systemd/unit-file.cpp
     provider/systemd/unit.cpp
     provider/systemd/systemd-provider.cpp
+    provider/polkit/polkit-provider.cpp
     provider/dbus/systemd/systemd-manager.cpp
     provider/dbus/polkit/policykit-1-authority.cpp
     module/system-services-manager/system-services-manager.cpp

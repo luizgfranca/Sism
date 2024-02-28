@@ -28,7 +28,7 @@ using namespace provider::systemd;
 
 SystemdProvider::SystemdProvider() {
     m_dbus_systemd_manager_interface = std::make_unique<dbus::systemd::SystemdManager>();
-    m_polkit_authority_interface = std::make_unique<dbus::polkit::PolicyKit1Authority>();
+    m_polkit_provider = std::make_unique<polkit::PolkitProvider>();
     m_unit_paths = m_dbus_systemd_manager_interface->get_unit_paths_property();
 
     module::logger::debug("loading unit paths");
@@ -78,10 +78,11 @@ bool SystemdProvider::enable_unit(const Unit& unit) {
         return false;
     }
 
-    auto result = m_polkit_authority_interface->checkAuthorization("org.freedesktop.systemd1.manage-unit-files");
-    module::logger::debug("check_authorization(authorized={} challenge={})", result.get<0>(), result.get<1>());
+    auto is_authrized = m_polkit_provider->request_authorization(
+        polkit::PolkitAction::SYSTEMD1_MANAGE_UNIT_FILES
+    );
 
-    if(!result.get<0>()) {
+    if (!is_authrized) {
         return false;
     }
 
@@ -105,13 +106,11 @@ bool SystemdProvider::disable_unit(const Unit& unit) {
         return false;
     }
 
-    auto result = m_polkit_authority_interface->checkAuthorization(
-        "org.freedesktop.systemd1.manage-unit-files"
+    auto is_authrized = m_polkit_provider->request_authorization(
+        polkit::PolkitAction::SYSTEMD1_MANAGE_UNIT_FILES
     );
-    
-    module::logger::debug("check_authorization(authorized={} challenge={})", result.get<0>(), result.get<1>());
 
-    if(!result.get<0>()) {
+    if (!is_authrized) {
         return false;
     }
 

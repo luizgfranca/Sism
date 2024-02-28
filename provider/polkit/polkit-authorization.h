@@ -1,6 +1,6 @@
 /*
  *   SISM - Services manager for GNU/Linux based operating systems
- *   Copyright (C) 2023 Luiz Gustavo <luizgfc@proton.me>
+ *   Copyright (C) 2024 Luiz Gustavo <luizgfc@proton.me>
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU Affero General Public License as
@@ -16,23 +16,32 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
+
+#pragma once
+
 #include <string>
-#include <format>
-#include <map>
+#include <vector>
 
-namespace module::logger {
-    template<typename... T>
-    void debug(std::format_string<T...> __fmt, T&&... __args) {
-        std::cout << "[DEBUG] " + std::format( __fmt, __args...) + "\n";
-    }
 
-    inline void debug(std::string description, std::map<std::string, std::string> dictionary) {
-        std::string str = "[DEBUG] " + description + ": {\n";
-        for (auto item : dictionary) {
-            str += "  " + item.first + ": " + item.second + "\n";
+
+namespace provider::polkit {
+    enum PolkitAction {
+        SYSTEMD1_MANAGE_UNIT_FILES
+    };
+
+    const std::vector<std::string> action_id_strings = {
+        "org.freedesktop.systemd1.manage-unit-files"
+    };
+
+    template <typename T>
+    std::string to_string(T v) { return "none"; };
+
+    template <>
+    inline std::string to_string<PolkitAction>(PolkitAction action) {
+        if(action >= action_id_strings.size()) {
+            return "none";
         }
-        str += "}\n";
-        std::cout << str;
-    }
-}
+
+        return action_id_strings[action];
+    };
+};

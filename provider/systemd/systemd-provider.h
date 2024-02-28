@@ -24,13 +24,14 @@
 #include <vector>
 #include "unit.h"
 #include "../dbus/systemd/systemd-manager.h"
-#include "../dbus/polkit/policykit-1-authority.h"
+#include "../polkit/polkit-provider.h"
 
 namespace provider::systemd {
     class SystemdProvider {
         std::unique_ptr<dbus::systemd::SystemdManager> m_dbus_systemd_manager_interface;
-        std::unique_ptr<dbus::polkit::PolicyKit1Authority> m_polkit_authority_interface;
         std::shared_ptr<std::vector<std::string>> m_unit_paths;
+        
+        std::unique_ptr<polkit::PolkitProvider> m_polkit_provider;
     public:
         // TODO use dependency injection for Systemd interfaces
         SystemdProvider();
