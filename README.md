@@ -1,4 +1,4 @@
-# SISM - Services manager for the GNU/Linux desktop
+# SISM - Services manager for Systemd enabled Linux desktops
 
 Sism is a tool to discover and manage the services running on the background of your system: web servers, daemons, system services, and many other things.
 
