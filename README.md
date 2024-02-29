@@ -37,7 +37,7 @@ The project has an RPM package that can be used for the fedora 38 installation:
 
 #### Ubuntu >= 23.04
  - Download the `sism-0.8.0-1_amd64.deb` release file
- - On the download folder run `sudo apt install sism-0.8.0-1_amd64.deb`
+ - On the download folder run `sudo apt install ./sism-0.8.0-1_amd64.deb`
  - Search for the application in your main menu
 
 It is in my intentions to support older releases, and other distributions, I will just have to wrestle against some dependencies.
